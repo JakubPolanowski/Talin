@@ -1,8 +1,10 @@
 import numpy as np
 
+# * Note the inclusion of average, median, and stdev is effectively redudant however they are included for the purpose of giving a consistent API
+
 
 def average(list):
-    """Returns average of a sequence of numbers. Note that this function just calls numpy.average function.
+    """Returns average of a sequence of numbers. Note that this function just calls  the numpy.average function.
 
     Args:
         list (sequence of numbers): List of numbers to average (for instance price)
@@ -15,7 +17,7 @@ def average(list):
 
 
 def median(list):
-    """Returns median of a sequence of numbers. Note that this function just calls numpy.median function.
+    """Returns median of a sequence of numbers. Note that this function just calls the numpy.median function
 
     Args:
         list (sequence of numbers): List of numbers to get the median of (for instance price)
@@ -25,6 +27,20 @@ def median(list):
     """
 
     return np.median(list)
+
+
+def std(list, ddof=1):
+    """Returns the standard deviation of a sequence of numbers. Note that this function just calls the numpy.std function. By default returns the sample standard deviation (ddof=1).
+
+    Args:
+        list (sequence of numbers): List of numbers to calculate the standard deviation of
+        ddof (int, optional): Degrees of freedom. Defaults to 1.
+
+    Returns:
+        Number: Standard deviation of input list
+    """
+
+    return np.std(list, ddof=ddof)
 
 
 def typical_price(high, low, close):
