@@ -12,6 +12,17 @@ def test_median():
     assert simple_stats.median(array) == np.median(array)
 
 
+def test_std():
+    array = np.random.rand(10)
+    assert simple_stats.std(array) == np.std(array, ddof=1)
+
+
+def test_std_ddof():
+    array = np.random.rand(10)
+    for ddof in range(6):
+        assert simple_stats.std(array, ddof=ddof) == np.std(array, ddof=ddof)
+
+
 def test_typical_price():
     assert simple_stats.typical_price(10, 5, 3) == 6
 
