@@ -1,6 +1,6 @@
 import numpy as np
 
-# * Note the inclusion of average, median, and stdev is effectively redudant however they are included for the purpose of giving a consistent API
+# * Note the inclusion of average, median, var, and stdev is effectively redudant however they are included for the purpose of giving a consistent API
 
 
 def average(list):
@@ -27,6 +27,20 @@ def median(list):
     """
 
     return np.median(list)
+
+
+def var(list, ddof=1):
+    """Returns the variance of a sequence of numbers. Note that this function just calls the numpy.var function. By default returns the sample variance (ddof=1).
+
+    Args:
+        list (sequence of numbers): List of numbers to calculate the standard deviation of
+        ddof (int, optional): Degrees of freedom. Defaults to 1.
+
+    Returns:
+        Number: Variance of input list
+    """
+
+    return np.var(list, ddof=ddof)
 
 
 def std(list, ddof=1):
