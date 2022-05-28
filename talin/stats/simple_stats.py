@@ -1,0 +1,57 @@
+import numpy as np
+
+
+def average(list):
+    """Returns average of a sequence of numbers. Note that this function just calls numpy.average function.
+
+    Args:
+        list (sequence of numbers): List of numbers to average (for instance price)
+
+    Returns:
+        Number: Average of list
+    """
+
+    return np.average(list)
+
+
+def median(list):
+    """Returns median of a sequence of numbers. Note that this function just calls numpy.median function.
+
+    Args:
+        list (sequence of numbers): List of numbers to get the median of (for instance price)
+
+    Returns:
+        Number: Median of List
+    """
+
+    return np.median(list)
+
+
+def typical_price(high, low, close):
+    """Returns the typical price based on the period's (ex. day's) high, low, and close values. Multiple values can be calculated by passing in equal shaped numpy arrays for high, low, and close.
+
+    Args:
+        high (number or numpy array of numbers): High of period
+        low (number or numpy array of numbers): Low of period
+        close (number or numpy array of numbers): Close of period
+
+    Returns:
+        Number or numpy array: Typical Price of period/periods (if inputs were numpy arrays or requivalent)
+    """
+
+    return (high + low + close)/3
+
+
+def weighted_close(high, low, close):
+    """Returns the weighted close based on the period's (ex. day's) high, low, and close values. Multiple values can be calculated by passing in equal shaped numpy arrays for high, low, and close.
+
+    Args:
+        high (number or numpy array of numbers): High of period
+        low (number or numpy array of numbers): Low of period
+        close (number or numpy array of numbers): Close of period
+
+    Returns:
+        Number or numpy array: Weighted Close of period/periods (if inputs were numpy arrays or equivalent)
+    """
+
+    return (high + low + close*2)/4
