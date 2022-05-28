@@ -1,24 +1,31 @@
 from src.talin.stats import simple_stats
 import numpy as np
 
+array = np.random.rand(10)
+
 
 def test_mean():
-    array = np.random.rand(10)
     assert simple_stats.average(array) == np.mean(array)
 
 
 def test_median():
-    array = np.random.rand(10)
     assert simple_stats.median(array) == np.median(array)
 
 
+def test_var():
+    assert simple_stats.var(array) == np.var(array, ddof=1)
+
+
+def test_var_ddof():
+    for ddof in range(6):
+        assert simple_stats.var(array, ddof=ddof) == np.var(array, ddof=ddof)
+
+
 def test_std():
-    array = np.random.rand(10)
     assert simple_stats.std(array) == np.std(array, ddof=1)
 
 
 def test_std_ddof():
-    array = np.random.rand(10)
     for ddof in range(6):
         assert simple_stats.std(array, ddof=ddof) == np.std(array, ddof=ddof)
 
