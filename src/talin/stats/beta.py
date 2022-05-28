@@ -1,5 +1,7 @@
 import numpy as np
 
+__all__ = ["beta"]
+
 
 def beta(stock, market, pct_change=False):
     """Calculates beta for the given stock based on the market represenative (for instance $SPY). Note that the time periodicity and start date must be matching between stock and market inputs otherwise beta value will be meaningless. 

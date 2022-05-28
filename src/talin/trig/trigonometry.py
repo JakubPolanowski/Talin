@@ -1,6 +1,8 @@
 from math import radians
 import numpy as np
 
+__all__ = ["linear_angle"]
+
 
 def linear_angle(slope, units="deg"):
     """Returns the angle of the line specified by the slope, often referred to as Linear Regression Angle
