@@ -490,8 +490,35 @@ def trix(price: pd.Series, first_periods=15, second_periods=15, third_periods=15
     return (triple - diff) / diff
 
 
-def ultosc():  # Ultimate Oscillator
-    pass
+def ultosc(high: pd.Series, low: pd.Series, close: pd.Series,
+           periods1=7, periods2=14, periods3=28) -> pd.Series:  # Ultimate Oscillator
+    """Calculates the Ultimate Oscillator given series of high, low, and close.
+
+    Args:
+        high (pd.Series): Series of high
+        low (pd.Series): Series of low
+        close (pd.Series): Series of close
+        periods1 (int, optional): N periods to look back for first average. Defaults to 7.
+        periods2 (int, optional): N periods to look back for second average. Defaults to 14.
+        periods3 (int, optional): N periods to look back for third average. Defaults to 28.
+
+    Returns:
+        pd.Series: Ultimate Oscillator series
+    """
+
+    minLowPC = np.r_[low.values, close.shift(1).values].T.min(axis=1)
+    true_range = pd.Series(tr(high, low, close.shift(1)))
+
+    buying_pressure = close - minLowPC
+
+    avg1 = buying_pressure.rolling(
+        periods1).sum() / true_range.rolling(periods1).sum()
+    avg2 = buying_pressure.rolling(
+        periods2).sum() / true_range.rolling(periods2).sum()
+    avg3 = buying_pressure.rolling(
+        periods3).sum() / true_range.rolling(periods3).sum()
+
+    return (avg1*4 + avg2*2 + avg3) / 5 * 100
 
 
 def willr(high: pd.Series, low: pd.Series, close: pd.Series, periods=14) -> pd.Series:  # Williams' %R
