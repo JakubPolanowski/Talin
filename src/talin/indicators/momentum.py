@@ -4,6 +4,8 @@ from src.talin.stats import simple_stats
 
 __all__ = ["tr", "attr", "adx", "adxr"]
 
+# TODO refactor to explicityly use predominantly use pd Series
+
 
 def tr(high, low, prev_close):
     """Calculates the True Range given the highs, lows and the previous closes (period-1). Note that inputs must be given as numpy arrays or similar objects such as pandas series. 
@@ -409,8 +411,23 @@ def rsi(price, periods=14):
     return 100 - (100 / (1+rs))
 
 
-def stoch():
-    pass
+def stoch(high: pd.Series, low: pd.Series, close: pd.Series, period=14) -> pd.Series:
+    """Calculates the Stochastic Oscillator given an input of the highes, lows, and closes.
+
+    Args:
+        high (pd.Series): Series of highs
+        low (pd.Series): Series of lows
+        close (pd.Series): Series of closes
+        period (int, optional): Number of periods to look back. Defaults to 14.
+
+    Returns:
+        pd.Series: Stochasic Oscillator
+    """
+
+    highest = high.rolling(period).max()
+    lowest = low.rolling(period).min()
+
+    return (close - lowest) / (highest - lowest) * 100
 
 
 def stochf():
@@ -437,7 +454,6 @@ def willr():
 
 TODO IMPLEMENT
 
-RSI                  Relative Strength Index
 STOCH                Stochastic
 STOCHF               Stochastic Fast
 STOCHRSI             Stochastic Relative Strength Index
