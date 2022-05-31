@@ -124,18 +124,57 @@ def adxr(adx, lookback=2):
     return (adx - pd.Series(adx).shift(lookback)) / 2
 
 
-def apo(close, short_period=14, long_period=30):
+def apo(close, short_periods=14, long_periods=30):
+    """Returns Absolute Price Oscilliator given the a list of closing values and the number of periods for the short term and long term
+
+    Args:
+        close (Numerical List): List of closing values
+        short_periods (int, optional): Number of periods for the short term. Defaults to 14.
+        long_periods (int, optional): Number of periods for the long term. Defaults to 30.
+
+    Returns:
+        pandas Series: Absolute Price Oscillator series
+    """
 
     close = pd.Series(close)
-    return close.ewm(alpha=1/short_period) - close.ewm(alpha=1/long_period)
-    pass
+    return close.ewm(alpha=1/short_periods) - close.ewm(alpha=1/long_periods)
 
 
-def aroon():
-    pass
+def aroon(high, low, periods=25):
+    """Calculates the AROON indicator given the lists of highs and lows and the number of periods to use in the calculation.
+
+    Args:
+        high (Numerical List): List of highs
+        low (Numerical List): List of lows
+        periods (int, optional): Number of periods. Defaults to 25.
+
+    Returns:
+        (pandas Series, pandas Series): Returns the AROON high and AROON low series.
+    """
+
+    high, low = (pd.Series(high), pd.Series(low))
+
+    aroon_high = 100 * \
+        high.rolling(periods + 1).apply(lambda x: x.argmax()) / periods
+    aroon_low = 100 * \
+        low.rolling(periods + 1).apply(lambda x: x.argmin()) / periods
+
+    return aroon_high, aroon_low
 
 
 def aroon_osc():
+    pass
+
+
+def bop():
+    pass
+
+
+def cci():
+    pass
+
+
+def cmo():
     pass
 
 
@@ -143,8 +182,6 @@ def aroon_osc():
 
 TODO IMPLEMENT
 
-APO                  Absolute Price Oscillator
-AROON                Aroon
 AROONOSC             Aroon Oscillator
 BOP                  Balance Of Power
 CCI                  Commodity Channel Index
