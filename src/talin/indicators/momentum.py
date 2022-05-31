@@ -1,3 +1,4 @@
+from re import A
 import numpy as np
 import pandas as pd
 from src.talin.stats import simple_stats
@@ -467,8 +468,26 @@ def stoch_rsi(price: pd.Series, periods=14, rsi_periods=14) -> pd.Series:
     return (rsi_indicator - rsi_low) / (rsi_high - rsi_low)
 
 
-def trix():
-    pass
+def trix(price: pd.Series, first_periods=15, second_periods=15, third_periods=15) -> pd.Series:
+    """Calculates the Triple Exponential Average give a price series.
+
+    Args:
+        price (pd.Series): Series of prices
+        first_periods (int, optional): N Periods to use for first ema. Defaults to 15.
+        second_periods (int, optional): N Periods to use for second ema. Defaults to 15.
+        third_periods (int, optional): N Periods to use for third ema. Defaults to 15.
+
+    Returns:
+        pd.Series: _description_
+    """
+
+    triple = price.ewm(alpha=1/first_periods)\
+        .ewm(alpha=1/second_periods)\
+        .ewm(alpha=1/third_periods)
+
+    diff = triple.diff()
+
+    return (triple - diff) / diff
 
 
 def ultosc():
