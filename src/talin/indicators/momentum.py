@@ -2,9 +2,10 @@ from re import A
 import numpy as np
 import pandas as pd
 from src.talin.stats import simple_stats
+from src.talin.indicators import volatility
 
 __all__ = [
-    "tr", "atr", "adx", "positive_DM", "negative_DM", "adxr",
+    "adx", "positive_DM", "negative_DM", "adxr",
     "di", "dx", "adx", "adxr", "apo", "aroon", "aroon_osc",
     "bop", "cci", "cmo", "macd", "mfi", "mom", "ppo", "roc",
     "rocp", "rocr", "rocr100", "rsi", "stochf", "stoch",
@@ -12,36 +13,6 @@ __all__ = [
 ]
 
 # TODO refactor to explicityly use predominantly use pd Series
-
-
-def tr(high, low, prev_close):
-    """Calculates the True Range given the highs, lows and the previous closes (period-1). Note that inputs must be given as numpy arrays or similar objects such as pandas series. 
-
-    Args:
-        high (numpy array): array of highs
-        low (numpy array): array of lows
-        prev_close (numpy array): array of previous closes (period-1)
-
-    Returns:
-        numpy array: array of the True range for each period
-    """
-    return np.r_[high-low, high-prev_close, prev_close-low].T.max(axis=1)
-
-
-def atr(high, low, prev_close, loopback=14):
-    """Calculates the Average True Range given the highs, lows and the previous closes (period-1) with a set loopback. Note that the input arrays (high, low and prev_close) must be given as numpy arrays or similar objects such as pandas series.
-
-    Args:
-        high (numpy array): array of highs
-        low (numpy array): array of lows
-        prev_close (numpy array): array of pervious closes (period-1)
-        loopback (int, optional): The number of periods to use as the window for the simple moving average. Defaults to 14.
-
-    Returns:
-        numpy array: The Average True Range for each period
-    """
-
-    return pd.Series(tr(high, low, prev_close)).rolling(loopback).mean().values
 
 
 def positive_DM(high):
@@ -122,7 +93,7 @@ def adx(high, low, close, loopback=14):
     pDM = positive_DM(high)
     nDM = negative_DM(low)
 
-    avgTR = atr(high, low, np.r_[np.NaN, close[:-1]], loopback)
+    avgTR = volatility.atr(high, low, np.r_[np.NaN, close[:-1]], loopback)
 
     pDI = di(pDM, avgTR, loopback)
     nDI = di(nDM, avgTR, loopback)
@@ -513,7 +484,7 @@ def ultosc(high: pd.Series, low: pd.Series, close: pd.Series,
     """
 
     minLowPC = np.r_[low.values, close.shift(1).values].T.min(axis=1)
-    true_range = pd.Series(tr(high, low, close.shift(1)))
+    true_range = pd.Series(volatility.trange(high, low, close.shift(1)))
 
     buying_pressure = close - minLowPC
 
