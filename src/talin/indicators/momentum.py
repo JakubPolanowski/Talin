@@ -386,8 +386,27 @@ def rocr100(price):
     return rocr(price) * 100
 
 
-def rsi():
-    pass
+def rsi(price, periods=14):
+    """Calculates the Relative Strength Index based on the given price series and the number of periods to look back.
+
+    Args:
+        price (Numeric List): list of prices
+        periods (int, optional): Number of periods to look back. Defaults to 14.
+
+    Returns:
+        pandas Series: RSI series
+    """
+
+    price = pd.Series(price)
+    diff = price.diff()
+
+    positiveNegative = diff.apply(
+        lambda x: 1 if x > 0 else 0 if x < 0 else x)
+    gain = diff * positiveNegative
+    loss = diff.abs() * (1-positiveNegative)
+
+    rs = gain.rolling(periods).mean() / loss.rolling(periods).mean()
+    return 100 - (100 / (1+rs))
 
 
 def stoch():
