@@ -390,11 +390,34 @@ def rsi():
     pass
 
 
+def stoch():
+    pass
+
+
+def stochf():
+    pass
+
+
+def stoch_rsi():
+    pass
+
+
+def trix():
+    pass
+
+
+def ultosc():
+    pass
+
+
+def willr():
+    pass
+
+
 """
 
 TODO IMPLEMENT
 
-PPO                  Percentage Price Oscillator
 RSI                  Relative Strength Index
 STOCH                Stochastic
 STOCHF               Stochastic Fast
