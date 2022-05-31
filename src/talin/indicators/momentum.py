@@ -296,8 +296,19 @@ def mfi(high, low, close, volume, periods=14):
     return 100 - (100 / (1 + moneyFlowRatio))
 
 
-def mom():
-    pass
+def mom(price, periods=10):
+    """Calculates the Momentum of the given price based on the number of periods specified.
+
+    Args:
+        price (Numerical List): List of prices (for example. closing)
+        periods (int, optional): N-period momentum. Defaults to 10.
+
+    Returns:
+        pandas Series: N-period momentum of the price list
+    """
+
+    price = pd.Series(price)
+    return price - price.shift(periods)
 
 
 def ppo():
