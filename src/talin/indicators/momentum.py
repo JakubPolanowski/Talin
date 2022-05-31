@@ -411,8 +411,8 @@ def rsi(price, periods=14):
     return 100 - (100 / (1+rs))
 
 
-def stoch(high: pd.Series, low: pd.Series, close: pd.Series, period=14) -> pd.Series:
-    """Calculates the Stochastic Oscillator given an input of the highes, lows, and closes.
+def stochf(high: pd.Series, low: pd.Series, close: pd.Series, period=14) -> pd.Series:
+    """Calculates the Fast Stochastic Oscillator given an input of the highes, lows, and closes.
 
     Args:
         high (pd.Series): Series of highs
@@ -421,7 +421,7 @@ def stoch(high: pd.Series, low: pd.Series, close: pd.Series, period=14) -> pd.Se
         period (int, optional): Number of periods to look back. Defaults to 14.
 
     Returns:
-        pd.Series: Stochasic Oscillator
+        pd.Series: Fast Stochasic Oscillator
     """
 
     highest = high.rolling(period).max()
@@ -430,8 +430,22 @@ def stoch(high: pd.Series, low: pd.Series, close: pd.Series, period=14) -> pd.Se
     return (close - lowest) / (highest - lowest) * 100
 
 
-def stochf():
-    pass
+def stoch(high: pd.Series, low: pd.Series, close: pd.Series,
+          period=14, slow_window=3) -> pd.Series:
+    """Calculates the Slow Stochastic Oscillator given an input of the highes, lows, and closes. The slow stochastic has a 3 period moving average applied to the stochastic indicator.
+
+    Args:
+        high (pd.Series): Series of highs
+        low (pd.Series): Series of lows
+        close (pd.Series): Series of closes
+        period (int, optional): Number of periods to look back. Defaults to 14.
+        slow_window (int, optional): The smoothing window on the stochastic indicator (1 -> fast stochastic). Defaults to 3.
+
+    Returns:
+        pd.Series: Slow Stochasic Oscillator
+    """
+
+    return stochf(high, low, close, period).rolling(3).mean()
 
 
 def stoch_rsi():
