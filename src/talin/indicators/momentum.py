@@ -490,20 +490,24 @@ def trix(price: pd.Series, first_periods=15, second_periods=15, third_periods=15
     return (triple - diff) / diff
 
 
-def ultosc():
+def ultosc():  # Ultimate Oscillator
     pass
 
 
-def willr():
-    pass
+def willr(high: pd.Series, low: pd.Series, close: pd.Series, periods=14) -> pd.Series:  # Williams' %R
+    """Calculates Williams' %R given series of highs, lows, and closes. 
 
+    Args:
+        high (pd.Series): Series of highs
+        low (pd.Series): Series of lows
+        close (pd.Series): Series of Closes
+        periods (int, optional): Number of periods to look back. Defaults to 14.
 
-"""
+    Returns:
+        pd.Series: Williams' %R series
+    """
 
-TODO IMPLEMENT
+    highestH = high.rolling(periods).max()
+    lowestL = low.rolling(periods).min()
 
-TRIX                 1-day Rate-Of-Change (ROC) of a Triple Smooth EMA
-ULTOSC               Ultimate Oscillator
-WILLR                Williams' %R
-
-"""
+    return (highestH - close) / (highestH - lowestL)
