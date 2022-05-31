@@ -124,7 +124,10 @@ def adxr(adx, lookback=2):
     return (adx - pd.Series(adx).shift(lookback)) / 2
 
 
-def apo():
+def apo(close, short_period=14, long_period=30):
+
+    close = pd.Series(close)
+    return close.ewm(alpha=1/short_period) - close.ewm(alpha=1/long_period)
     pass
 
 
