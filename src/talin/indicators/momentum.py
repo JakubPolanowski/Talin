@@ -250,16 +250,20 @@ def cmo(close, periods=9):
     return (nHigher - nLower) / (nHigher + nLower) * 100
 
 
-def macd():
-    pass
+def macd(close, short_periods=12, long_periods=26):
+    """Calculates the Moving Average Convergence Divergence given the input of a list of closes, number of period for short term ema, and number periods for long term ema.
 
+    Args:
+        close (Numerical List): List of closes
+        short_periods (int, optional): Number of periods for short term ema. Defaults to 12.
+        long_periods (int, optional): Number of periods for long term ema. Defaults to 26.
 
-def macd_ext():
-    pass
+    Returns:
+        pandas Series: Moving Average Convergence Diveregence
+    """
 
-
-def macd_fix():
-    pass
+    close = pd.Series(close)
+    return close.ewm(alpha=1/short_periods) - close.ewm(alpha=1/long_periods)
 
 
 def mfi():
@@ -270,9 +274,6 @@ def mfi():
 
 TODO IMPLEMENT
 
-MACD                 Moving Average Convergence/Divergence
-MACDEXT              MACD with controllable MA type
-MACDFIX              Moving Average Convergence/Divergence Fix 12/26
 MFI                  Money Flow Index
 MOM                  Momentum
 PPO                  Percentage Price Oscillator
