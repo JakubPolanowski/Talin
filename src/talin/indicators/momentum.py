@@ -177,8 +177,20 @@ def aroon_osc(high, low, periods=25):
     return aroon_up - aroon_down
 
 
-def bop():
-    pass
+def bop(high, low, open, close):
+    """Calculates the Balance of Power indicator, given the input arrays of high, low, open, and close. Note that these input arrays must be numpy arrays or similar objects such as pandas Series
+
+    Args:
+        high (numpy array): array of highs
+        low (numpy array): array of lows
+        open (numpy array): array of opens
+        close (numpy array): array of closes
+
+    Returns:
+        numpy array/same as input type: Balance of Power
+    """
+
+    return (close - open) / (high - low)
 
 
 def cci():
@@ -193,7 +205,6 @@ def cmo():
 
 TODO IMPLEMENT
 
-AROONOSC             Aroon Oscillator
 BOP                  Balance Of Power
 CCI                  Commodity Channel Index
 CMO                  Chande Momentum Oscillator
