@@ -67,7 +67,7 @@ def negative_DM(low):
     return nDM
 
 
-def directional_indicator(dm, avgTR, loopback=14):
+def di(dm, avgTR, loopback=14):
     """Calculates the (postive or negative) Directional indicator. Note that dm and avgTR must be numpy arrays or similar objects such as pandas series.
 
     Args:
@@ -80,6 +80,21 @@ def directional_indicator(dm, avgTR, loopback=14):
     """
 
     return 100 * (pd.Series(dm).ewm(alpha=1/loopback).mean() / avgTR)
+
+
+def dx(pDI, nDI):
+    """Calculates the Directional Movement Index given the postive and negative Directional Indicators. Note that these must be given numerical lists that can be converted to pandas Series or are already pandas Series.
+
+    Args:
+        pDI (Numerical List): positive Directional Indicator
+        nDI (Numierlca List): negative Directional Indicator
+
+    Returns:
+        pandas Series: Directional Movement Index
+    """
+
+    pDI, nDI = (pd.Series(pDI), pd.Series(nDI))
+    return (pDI - nDI).abs() / (pDI + nDI).abs() * 100
 
 
 def adx(high, low, close, loopback=14):
@@ -100,13 +115,13 @@ def adx(high, low, close, loopback=14):
 
     avgTR = atr(high, low, np.r_[np.NaN, close[:-1]], loopback)
 
-    pDI = directional_indicator(pDM, avgTR, loopback)
-    nDI = directional_indicator(nDM, avgTR, loopback)
+    pDI = di(pDM, avgTR, loopback)
+    nDI = di(nDM, avgTR, loopback)
 
     pDI = 100 * (pd.Series(pDM).ewm(alpha=1/loopback).mean() / avgTR)
     nDI = 100 * (pd.Series(nDM).ewm(alpha=1/loopback).mean() / avgTR)
 
-    averageDX = ((pDI - nDI).abs() / (pDI + nDI)).ewm(alpha=1/loopback).mean()
+    averageDX = dx(pDI, nDI).ewm(alpha=1/loopback).mean()
 
     return pDI, nDI, averageDX
 
@@ -235,10 +250,6 @@ def cmo(close, periods=9):
     return (nHigher - nLower) / (nHigher + nLower) * 100
 
 
-def dx():
-    pass
-
-
 def macd():
     pass
 
@@ -259,8 +270,6 @@ def mfi():
 
 TODO IMPLEMENT
 
-CMO                  Chande Momentum Oscillator
-DX                   Directional Movement Index
 MACD                 Moving Average Convergence/Divergence
 MACDEXT              MACD with controllable MA type
 MACDFIX              Moving Average Convergence/Divergence Fix 12/26
