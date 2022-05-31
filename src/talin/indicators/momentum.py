@@ -448,8 +448,23 @@ def stoch(high: pd.Series, low: pd.Series, close: pd.Series,
     return stochf(high, low, close, period).rolling(3).mean()
 
 
-def stoch_rsi():
-    pass
+def stoch_rsi(price: pd.Series, periods=14, rsi_periods=14) -> pd.Series:
+    """Calculates the Stochastic RSI given an input of a price series.
+
+    Args:
+        price (pd.Series): Series of prices
+        periods (int, optional): Number of periods to look back for the stochastic RSI indicator. Defaults to 14.
+        rsi_periods (int, optional): Number of periods to look back for the underlying RSI indicator. Defaults to 14.
+
+    Returns:
+        pd.Series: Stochastic RSI indicator
+    """
+
+    rsi_indicator = rsi(price, rsi_periods)
+    rsi_high = rsi_indicator.rolling(periods).max()
+    rsi_low = rsi_indicator.rolling(periods).min()
+
+    return (rsi_indicator - rsi_low) / (rsi_high - rsi_low)
 
 
 def trix():
@@ -468,9 +483,6 @@ def willr():
 
 TODO IMPLEMENT
 
-STOCH                Stochastic
-STOCHF               Stochastic Fast
-STOCHRSI             Stochastic Relative Strength Index
 TRIX                 1-day Rate-Of-Change (ROC) of a Triple Smooth EMA
 ULTOSC               Ultimate Oscillator
 WILLR                Williams' %R
