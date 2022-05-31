@@ -311,8 +311,23 @@ def mom(price, periods=10):
     return price - price.shift(periods)
 
 
-def ppo():
-    pass
+def ppo(price, short_periods=12, long_periods=26):
+    """Calculates the Percentage Price Oscillator based on given price list and number of periods in the short and long term.
+
+    Args:
+        price (Numerical List): List of prices
+        short_periods (int, optional): N periods to use for short term. Defaults to 12.
+        long_periods (int, optional): N periods to use for long term. Defaults to 26.
+
+    Returns:
+        pandas Series: Percentage Price Oscillator series
+    """
+
+    price = pd.Series(price)
+    short_ema = price.ewm(alpha=1/short_periods)
+    long_ema = price.ewm(alpha=1/long_periods)
+
+    return (short_ema - long_ema) / long_ema * 100
 
 
 def roc(price):
@@ -379,7 +394,6 @@ def rsi():
 
 TODO IMPLEMENT
 
-MOM                  Momentum
 PPO                  Percentage Price Oscillator
 RSI                  Relative Strength Index
 STOCH                Stochastic
