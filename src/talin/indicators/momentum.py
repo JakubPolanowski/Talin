@@ -304,11 +304,63 @@ def ppo():
     pass
 
 
-def roc():
-    pass
+def roc(price):
+    """Calculates Rate of Change given list of prices.
+
+    Args:
+        price (Numerical List): list of prices
+
+    Returns:
+        pandas Series: Rate of Change series
+    """
+
+    price = pd.Series(price)
+    return (price / price.shift(1) - 1) * 100
 
 
-def rocp():
+def rocp(price):
+    """Calculates the Rate of Change Percentage given a list of prices.
+
+    Args:
+        price (Numerical List): list of prices
+
+    Returns:
+        pandas Series: Rate of Change Percentage series
+    """
+
+    price = pd.Series(price)
+    prev = price.shift(1)
+    return (price - prev) / prev
+
+
+def rocr(price):
+    """Calculates the Rate of Change Ratio given a list of prices.
+
+    Args:
+        price (Numerical List): list of prices
+
+    Returns:
+        pandas Series: Rate of Change Ratio series
+    """
+
+    price = pd.Series(price)
+    return price / price.shift(1)
+
+
+def rocr100(price):
+    """Calculates the Rate of Change Ratio at 100 scale given a list of prices.
+
+    Args:
+        price (Numerical List): list of prices
+
+    Returns:
+        pandas Series: Rate of Change Ratio at 100 scale series
+    """
+
+    return rocr(price) * 100
+
+
+def rsi():
     pass
 
 
@@ -318,10 +370,6 @@ TODO IMPLEMENT
 
 MOM                  Momentum
 PPO                  Percentage Price Oscillator
-ROC                  Rate of change : ((price/prevPrice)-1)*100
-ROCP                 Rate of change Percentage: (price-prevPrice)/prevPrice
-ROCR                 Rate of change ratio: (price/prevPrice)
-ROCR100              Rate of change ratio 100 scale: (price/prevPrice)*100
 RSI                  Relative Strength Index
 STOCH                Stochastic
 STOCHF               Stochastic Fast
