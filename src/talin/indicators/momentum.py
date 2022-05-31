@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from src.talin.stats import simple_stats
 
 __all__ = ["tr", "attr", "adx", "adxr"]
 
@@ -193,11 +194,64 @@ def bop(high, low, open, close):
     return (close - open) / (high - low)
 
 
-def cci():
+def cci(high, low, close, periods=20):
+    """Calculates the Commodity Channel Index, given the input arrays of high, low, open and close. Note that these input arrays must be numpy arrays or similar objects such as pandas Series.
+
+    Args:
+        high (numpy array): array of highs
+        low (numpy array): array of lows
+        close (numpy array): array of closes
+        periods (int, optional): Number of periods for the moving average. Defaults to 20.
+
+    Returns:
+        pandas Series: Commodity Channel Index series.
+    """
+
+    typicalP = pd.Series(simple_stats.typical_price(high, low, close))
+    movingAvg = typicalP.rolling(periods).mean()
+    meanDeviation = (
+        typicalP - movingAvg).abs().rolling(periods).mean() / periods
+
+    return (typicalP - movingAvg) / (0.015 * meanDeviation)
+
+
+def cmo(close, periods=9):
+    """Calculates the Chande Momentum Oscillator given the input list of closes and the number of periods to look back.
+
+    Args:
+        close (Numerical List): List of closes
+        periods (int, optional): Number of periods to look back. Defaults to 9.
+
+    Returns:
+        pandas Series: Chande Momenum Oscillator series
+    """
+
+    close = pd.Series(close).diff()
+
+    up_down = close.diff().apply(lambda x: 1 if x > 0 else 0 if x < 0 else x)
+    nHigher = up_down.roling(periods).sum()
+    nLower = (1-up_down).rolling(periods).sum()
+
+    return (nHigher - nLower) / (nHigher + nLower) * 100
+
+
+def dx():
     pass
 
 
-def cmo():
+def macd():
+    pass
+
+
+def macd_ext():
+    pass
+
+
+def macd_fix():
+    pass
+
+
+def mfi():
     pass
 
 
@@ -205,8 +259,6 @@ def cmo():
 
 TODO IMPLEMENT
 
-BOP                  Balance Of Power
-CCI                  Commodity Channel Index
 CMO                  Chande Momentum Oscillator
 DX                   Directional Movement Index
 MACD                 Moving Average Convergence/Divergence
