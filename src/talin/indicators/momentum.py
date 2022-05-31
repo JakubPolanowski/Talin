@@ -125,7 +125,7 @@ def adxr(adx, lookback=2):
 
 
 def apo(close, short_periods=14, long_periods=30):
-    """Returns Absolute Price Oscilliator given the a list of closing values and the number of periods for the short term and long term
+    """Calculates Absolute Price Oscilliator given the a list of closing values and the number of periods for the short term and long term
 
     Args:
         close (Numerical List): List of closing values
@@ -149,21 +149,32 @@ def aroon(high, low, periods=25):
         periods (int, optional): Number of periods. Defaults to 25.
 
     Returns:
-        (pandas Series, pandas Series): Returns the AROON high and AROON low series.
+        (pandas Series, pandas Series): Returns the AROON up and AROON down series.
     """
 
     high, low = (pd.Series(high), pd.Series(low))
 
-    aroon_high = 100 * \
+    aroon_up = 100 * \
         high.rolling(periods + 1).apply(lambda x: x.argmax()) / periods
-    aroon_low = 100 * \
+    aroon_down = 100 * \
         low.rolling(periods + 1).apply(lambda x: x.argmin()) / periods
 
-    return aroon_high, aroon_low
+    return aroon_up, aroon_down
 
 
-def aroon_osc():
-    pass
+def aroon_osc(high, low, periods=25):
+    """Calculates the AROON Oscillator given the lists of high and lows and the number of periods to use in the calculation.
+
+    Args:
+        high (Numerical List): List of highs
+        low (Numerical List): List of lows
+        periods (int, optional): Number of periods. Defaults to 25.
+    Returns:
+        pandas Series: AROON Oscillator series
+    """
+
+    aroon_up, aroon_down = aroon(high, low, periods)
+    return aroon_up - aroon_down
 
 
 def bop():
