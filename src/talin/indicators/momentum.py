@@ -266,7 +266,49 @@ def macd(close, short_periods=12, long_periods=26):
     return close.ewm(alpha=1/short_periods) - close.ewm(alpha=1/long_periods)
 
 
-def mfi():
+def mfi(high, low, close, volume, periods=14):
+    """Calculates the Money Flow Index given the input arrays high, low, close, and volume, as well as the number of periods to look back. Note that the input arrays must be given as numpy arrays or similar objects such as pandas Series.
+
+    Args:
+        high (numpy array): Array of highs
+        low (numpy array): Array of lows
+        close (numpy array): Array of closes
+        volume (numpy array): Array of volumes
+        periods (int, optional): Number of periods to look back. Defaults to 14.
+
+    Returns:
+        pandas Series: Money Flow Index series
+    """
+
+    typicalP = pd.Series(simple_stats.typical_price(high, low, close))
+    typicalDiff = typicalP.diff()
+    moneyFlow = typicalP * volume
+
+    # the final else accomidates for NaN
+    positiveNegative = typicalDiff.apply(
+        lambda x: 1 if x > 0 else 0 if x < 0 else x)
+    positiveFlow = moneyFlow * positiveNegative
+    negativeFlow = moneyFlow * (1-positiveNegative)
+
+    moneyFlowRatio = positiveFlow.rolling(
+        periods).sum() / negativeFlow.rolling(periods).sum()
+
+    return 100 - (100 / (1 + moneyFlowRatio))
+
+
+def mom():
+    pass
+
+
+def ppo():
+    pass
+
+
+def roc():
+    pass
+
+
+def rocp():
     pass
 
 
@@ -274,7 +316,6 @@ def mfi():
 
 TODO IMPLEMENT
 
-MFI                  Money Flow Index
 MOM                  Momentum
 PPO                  Percentage Price Oscillator
 ROC                  Rate of change : ((price/prevPrice)-1)*100
