@@ -25,7 +25,7 @@ def ad(high: pd.Series, low: pd.Series, close: pd.Series, volume: pd.Series) -> 
     # money flow volume
     m = n * volume
 
-    return m.shift(1) - m
+    return m.shift(1) + m
 
 
 def adosc(high: pd.Series, low: pd.Series, close: pd.Series, volume: pd.Series,
