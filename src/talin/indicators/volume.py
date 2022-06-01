@@ -45,7 +45,7 @@ def adosc(high: pd.Series, low: pd.Series, close: pd.Series, volume: pd.Series,
     """
 
     ad_line = ad(high, low, close, volume)
-    return ad_line.ewm(alpha=1/short_periods) - ad_line.ewm(alpa=1/long_periods)
+    return ad_line.ewm(span=short_periods, adjust=False).mean() - ad_line.ewm(span=long_periods, adjust=False).mean()
 
 
 def obv(close: pd.Series, volume: pd.Series) -> pd.Series:
