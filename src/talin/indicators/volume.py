@@ -59,10 +59,9 @@ def obv(close: pd.Series, volume: pd.Series) -> pd.Series:
         pd.Series: OBV series
     """
 
-    diff = volume.diff()
     obvol = np.where(
-        diff > 0, volume, np.where(
-            diff < 0, -volume, 0  # if NaN or equal, will be zero
+        close > close.shift(1), volume, np.where(
+            close < close.shift(1), -volume, 0  # if NaN or equal, will be zero
         )
     ).cumsum()
 
