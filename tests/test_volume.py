@@ -5,6 +5,35 @@ import pandas as pd
 # TODO test ad and adosc
 
 
+def test_ad():
+    """AD (Accumulation/Distribution Formula)
+
+    AD = Previous AD + Current Money Flow Volume
+    Money Flow Volume = Money Flow Multipler * Volume for Period
+    Money Flow Multiplier = ((close - low) - (high - close)) / (high - low)
+
+    Source: https://corporatefinanceinstitute.com/resources/knowledge/trading-investing/accumulation-distribution-indicator-a-d/
+    """
+
+    size = 10
+    vol = pd.Series(np.random.rand(size))
+    close = pd.Series(np.random.rand(size) + 1)
+    low = pd.Series(close - np.random.rand())
+    high = pd.Series(close + np.random.rand())
+
+    money_flow_multiplier = ((close - low) - (high - close)) / (high - low)
+    money_flow_volume = money_flow_multiplier * vol
+
+    ad = money_flow_volume.shift(1) + money_flow_volume
+
+    assert np.isnan(ad[0])  # NaN != NaN but NaN is NaN
+    assert all(ad[1:] == volume.ad(high, low, close, vol)[1:])
+
+
+def test_adosc():
+    pass
+
+
 def test_obv():
     """OBV is a simple piece-wise cumulative summation function
 
@@ -20,7 +49,7 @@ def test_obv():
     # Note that below is not written efficently, written for max simplicity
     # to test if the actual implementation matches specification
 
-    size = 10
+    size = 100
     vol = np.random.rand(size)
     close = np.random.rand(size)
 
