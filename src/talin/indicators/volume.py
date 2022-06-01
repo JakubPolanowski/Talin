@@ -1,4 +1,9 @@
 import pandas as pd
+import numpy as np
+
+__all__ = [
+    "ad", "adosc", "obv"
+]
 
 
 def ad(high: pd.Series, low: pd.Series, close: pd.Series, volume: pd.Series) -> pd.Series:
@@ -43,10 +48,11 @@ def adosc(high: pd.Series, low: pd.Series, close: pd.Series, volume: pd.Series,
     return ad_line.ewm(alpha=1/short_periods) - ad_line.ewm(alpa=1/long_periods)
 
 
-def obv(volume: pd.Series) -> pd.Series:
+def obv(close: pd.Series, volume: pd.Series) -> pd.Series:
     """Calculates the On-Balance Volume Indicator
 
     Args:
+        close (pd.Serie): Series of closes
         volume (pd.Series): Series of Volumes
 
     Returns:
@@ -54,10 +60,11 @@ def obv(volume: pd.Series) -> pd.Series:
     """
 
     diff = volume.diff()
-    obvol = volume.copy()
+    obvol = np.where(
+        diff > 0, volume, np.where(
+            diff < 0, -volume, 0  # if NaN or equal, will be zero
+        )
+    ).cumsum()
 
-    obvol[diff < 0] = -obvol
-    obvol[diff == 0] = 0
-    obvol[obvol.index[0]] = pd.NA  # unknown since first value of diff is NaN
-
+    obvol[0] = np.NaN  # first value should be NaN because difference is NaN
     return obvol
