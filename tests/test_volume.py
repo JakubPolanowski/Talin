@@ -15,7 +15,7 @@ def test_ad():
     Source: https://corporatefinanceinstitute.com/resources/knowledge/trading-investing/accumulation-distribution-indicator-a-d/
     """
 
-    size = 10
+    size = 100
     vol = pd.Series(np.random.rand(size))
     close = pd.Series(np.random.rand(size) + 1)
     low = pd.Series(close - np.random.rand())
@@ -31,7 +31,26 @@ def test_ad():
 
 
 def test_adosc():
-    pass
+    """Chaikin Oscillator A/D OSC
+
+    A/D OSC = (3-day EMA of ADL) - (10-day EMA of ADL)
+
+    Source: https://www.investopedia.com/terms/c/chaikinoscillator.asp
+
+    Note: ADL calculation tested by test_ad()
+    """
+
+    size = 100
+    vol = pd.Series(np.random.rand(size))
+    close = pd.Series(np.random.rand(size) + 1)
+    low = pd.Series(close - np.random.rand())
+    high = pd.Series(close + np.random.rand())
+
+    ad = volume.ad(high, low, close, vol)
+
+    adosc = ad.ewm(span=3, adjust=False).mean() - \
+        ad.ewm(span=10, adjust=False).mean()
+    assert all(adosc.dropna() == volume.adosc(high, low, close, vol).dropna())
 
 
 def test_obv():
