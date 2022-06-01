@@ -1,16 +1,12 @@
 import numpy as np
 import pandas as pd
-"""
 
 # TODO refactor to use predominantly pandas series
-# TODO consider replacing loopback with periods 
+# TODO consider replacing loopback with periods
 
-NATR                 Normalized Average True Range
-
-"""
 
 __all__ = [
-    "trange", "atr"
+    "trange", "atr", "natr"
 ]
 
 
