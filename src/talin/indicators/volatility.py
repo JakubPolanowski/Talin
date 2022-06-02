@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 
-# TODO refactor to use predominantly pandas series
 # TODO consider replacing loopback with periods
 
 
@@ -10,19 +9,24 @@ __all__ = [
 ]
 
 
-def trange(high, low, prev_close):
-    # TODO consider if prev_close should become close
+def trange(high: pd.Series, low: pd.Series, close: pd.Series) -> pd.Series:
     """Calculates the True Range given the highs, lows and the previous closes (period-1). Note that inputs must be given as numpy arrays or similar objects such as pandas series. 
 
     Args:
-        high (numpy array): array of highs
-        low (numpy array): array of lows
-        prev_close (numpy array): array of previous closes (period-1)
+        high (numpy array): Series of highs
+        low (numpy array): Series of lows
+        close (numpy array): Series of closes
 
     Returns:
-        numpy array: array of the True range for each period
+        pd.Series: Series of the True range
     """
-    return np.r_[high-low, high-prev_close, prev_close-low].T.max(axis=1)
+    return pd.Series(
+        np.r_[
+            [high-low],
+            [(high-close.shift(1)).abs()],
+            [(low-close.shift(1)).abs()]
+        ].T.max(axis=1)
+    )
 
 
 def atr(high, low, prev_close, loopback=14):
