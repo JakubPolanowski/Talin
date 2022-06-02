@@ -58,4 +58,4 @@ def natr(high: pd.Series, low: pd.Series, close: pd.Series, periods=14) -> pd.Se
         pd.Series: Normalized True Range series
     """
 
-    return atr(high, low, close.shift(1), periods) / close * 100
+    return atr(high, low, close, periods) / close * 100
