@@ -62,7 +62,7 @@ def test_atr_periods():
     Same as test_atr however this time testing 1-30 loopback periods
     """
 
-    tr = volatility.trange(high, close, close)
+    tr = volatility.trange(high, low, close)
 
     for i in range(1, 31):
         assert all(tr.rolling(i).mean().dropna() == volatility.atr(
