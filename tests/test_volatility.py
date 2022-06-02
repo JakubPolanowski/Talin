@@ -47,7 +47,7 @@ def test_atr():
     Note, trange function tested with prior test above
     """
 
-    tr = volatility.trange(high, close, close)
+    tr = volatility.trange(high, low, close)
 
     # tr should be of type pd.Series, therefore use rolling method
 
