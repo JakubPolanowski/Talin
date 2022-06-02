@@ -10,12 +10,12 @@ __all__ = [
 
 
 def trange(high: pd.Series, low: pd.Series, close: pd.Series) -> pd.Series:
-    """Calculates the True Range given the highs, lows and the previous closes (period-1). Note that inputs must be given as numpy arrays or similar objects such as pandas series. 
+    """Calculates the True Range given the highs, lows and the closes (period-1).
 
     Args:
-        high (numpy array): Series of highs
-        low (numpy array): Series of lows
-        close (numpy array): Series of closes
+        high (pd.Series): Series of highs
+        low (pd.Series): Series of lows
+        close (pd.Series): Series of closes
 
     Returns:
         pd.Series: Series of the True range
@@ -29,21 +29,20 @@ def trange(high: pd.Series, low: pd.Series, close: pd.Series) -> pd.Series:
     )
 
 
-def atr(high, low, prev_close, loopback=14):
-    # TODO consider if prev_close should become close
-    """Calculates the Average True Range given the highs, lows and the previous closes (period-1) with a set loopback. Note that the input arrays (high, low and prev_close) must be given as numpy arrays or similar objects such as pandas series.
+def atr(high: pd.Series, low: pd.Series, close: pd.Series, periods=14) -> pd.Series:
+    """Calculates the Average True Range given the highs, lows, closes with a set loopback.
 
     Args:
-        high (numpy array): array of highs
-        low (numpy array): array of lows
-        prev_close (numpy array): array of pervious closes (period-1)
-        loopback (int, optional): The number of periods to use as the window for the simple moving average. Defaults to 14.
+        high (pd.Series): Series of highs
+        low (pd.Series): Series of lows
+        close (pd.Series): Series of closes
+        periods (int, optional): The number of periods to look back (window for simple moving average). Defaults to 14.
 
     Returns:
-        numpy array: The Average True Range for each period
+        pd.Series: The Average True Range series
     """
 
-    return pd.Series(trange(high, low, prev_close)).rolling(loopback).mean().values
+    return trange(high, low, close).rolling(periods).mean()
 
 
 def natr(high: pd.Series, low: pd.Series, close: pd.Series, periods=14) -> pd.Series:
