@@ -28,8 +28,9 @@ def test_trange():
         tr.append(max((highVLow, highVClosep, lowVClosep)))
 
     tr = pd.Series(tr)
+    trange_implemented = volatility.trange(high, low, close)
 
-    assert all(tr == volatility.trange(high, low, close))
+    assert all(tr.dropna() == trange_implemented.dropna())
 
 
 def test_atr():
@@ -51,7 +52,8 @@ def test_atr():
     # tr should be of type pd.Series, therefore use rolling method
 
     # test typical 14 days
-    assert all(tr.rolling(14).mean() == volatility.atr(high, low, close))
+    assert all(tr.rolling(14).mean().dropna() ==
+               volatility.atr(high, low, close).dropna())
 
 
 def test_atr_periods():
@@ -63,8 +65,8 @@ def test_atr_periods():
     tr = volatility.trange(high, close, close)
 
     for i in range(1, 31):
-        assert all(tr.rolling(i).mean() == volatility.atr(
-            high, low, close, periods=i))
+        assert all(tr.rolling(i).mean().dropna() == volatility.atr(
+            high, low, close, periods=i).dropna())
 
 
 def test_natr():
@@ -80,4 +82,4 @@ def test_natr():
     atr = volatility.atr(high, low, close)
     natr = (atr / close) * 100
 
-    assert natr == volatility.natr(high, low, close)
+    assert all(natr.dropna() == volatility.natr(high, low, close).dropna())
