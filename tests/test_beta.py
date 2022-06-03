@@ -1,12 +1,13 @@
 from src.talin.stats import beta
 import numpy as np
 import pytest
+import pandas as pd
 from sklearn.linear_model import LinearRegression
 
 PRECISION = 6
 
-stock = np.arange(1, 101) * np.random.random(100)
-market = np.arange(1, 101) * np.random.random(100)
+stock = pd.Series(np.arange(1, 101) * np.random.random(100))
+market = pd.Series(np.arange(1, 101) * np.random.random(100))
 
 stock_pct = ((stock - np.r_[np.NaN, stock[:-1]]) /
              np.r_[np.NaN, stock[:-1]])[1:]
