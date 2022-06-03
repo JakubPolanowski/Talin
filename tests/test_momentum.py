@@ -470,7 +470,7 @@ def test_stoch():
     for i in range(1, 21):
         stoch = stochf.rolling(i).mean()
         assert all(stoch.dropna() == momentum.stoch(
-            high, low, close, period=14, slow=i))
+            high, low, close, period=14, slow=i).dropna())
 
 
 def test_stoch_rsi():
