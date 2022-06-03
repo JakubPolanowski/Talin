@@ -401,18 +401,8 @@ def test_roc():
         assert all(roc.dropna() == momentum.roc(close, periods=i).dropna())
 
 
-def test_rocp():
-    pass
-
-
-def test_rocr():
-    pass
-
-
 """
 TODO Implement
-
-"macd", "mfi", "mom", "ppo", "roc", "rocp", "rocr",
-"rocr100", "rsi", "stochf", "stoch", "stoch_rsi",
+ "rsi", "stochf", "stoch", "stoch_rsi",
 "trix", "ultosc", "willr",
 """
