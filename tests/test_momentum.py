@@ -474,7 +474,25 @@ def test_stoch():
 
 
 def test_stoch_rsi():
-    pass
+    """Stochasic RSI Indicator
+
+                       RSI - min of RSI for N periods
+    StochRSI = -----------------------------------------------
+                max RSI for N Periods - min RSI for N Periods
+    """
+
+    rsi_ps = [3, 12, 26]
+
+    for rsi_p in rsi_ps:
+        rsi = momentum.rsi(close, periods=rsi_p)
+
+        for i in range(1, 21):
+            minRSI = rsi.rolling(i).min()
+            maxRSI = rsi.rolling(i).max()
+
+            stochRSI = (rsi - minRSI) / (maxRSI - minRSI)
+            assert all(stochRSI.dropna() == momentum.stoch_rsi(
+                close, periods=i, rsi_periods=rsi_p).dropna())
 
 
 def test_trix():
