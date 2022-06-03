@@ -347,7 +347,18 @@ def test_mfi():
 
 
 def test_mom():
-    pass
+    """Momentum
+
+    Momentum = Close - Close N periods ago
+
+    For example N could be 10
+
+    source: https://www.warriortrading.com/momentum-indicator/
+    """
+
+    for i in range(1, 21):
+        mom = close - close.shift(i)
+        assert all(mom.dropna() == momentum.mom(close, periods=i))
 
 
 def test_ppo():
