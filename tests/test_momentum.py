@@ -440,6 +440,8 @@ def test_stochf():
     source: https://www.fidelity.com/learning-center/trading-investing/technical-analysis/technical-indicator-guide/fast-stochastic
 
     https://www.investopedia.com/ask/answers/05/062405.asp
+
+    Typically 14 day
     """
 
     for i in range(1, 21):
@@ -452,7 +454,23 @@ def test_stochf():
 
 
 def test_stoch():
-    pass
+    """Stochasitic Slow Indicator (%D)
+
+    %D =  N Period SMA of %K
+
+    source: https://www.fidelity.com/learning-center/trading-investing/technical-analysis/technical-indicator-guide/fast-stochastic
+
+    https://www.investopedia.com/ask/answers/05/062405.asp
+
+    Typically 3 day slow
+    """
+
+    stochf = momentum.stochf(high, low, close, period=14)
+
+    for i in range(1, 21):
+        stoch = stochf.rolling(i).mean()
+        assert all(stoch.dropna() == momentum.stoch(
+            high, low, close, period=14, slow=i))
 
 
 def test_stoch_rsi():
