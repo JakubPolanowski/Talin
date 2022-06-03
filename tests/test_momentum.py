@@ -401,8 +401,57 @@ def test_roc():
         assert all(roc.dropna() == momentum.roc(close, periods=i).dropna())
 
 
-"""
-TODO Implement
- "rsi", "stochf", "stoch", "stoch_rsi",
-"trix", "ultosc", "willr",
-"""
+def test_rsi():
+    """Relative Strength Index
+
+                        100
+    RSI = 100 - ---------------------------- 
+                       SMA of Average Gain
+                 1 +  ----------------------
+                       SMA of Average Loss
+
+    Typically SMA of 14 periods
+
+    source: https://www.investopedia.com/terms/r/rsi.asp
+
+    https://www.omnicalculator.com/finance/rsi
+    """
+
+    delta = close.diff()
+    gain = delta.mask(close < close.shift(1), 0)
+    loss = delta.mask(close > close.shift(1), 0)
+
+    for i in range(1, 21):
+        sma_gain = gain.rolling(i).mean()
+        sma_loss = loss.rolling(i).mean()
+
+        rsi = 100 - (100 / (1 + (sma_gain/sma_loss)))
+
+        assert all(rsi.dropna() == momentum.rsi(close, periods=i).dropna())
+
+
+def test_stochf():
+    pass
+
+
+def test_stoch():
+    pass
+
+
+def test_stoch_rsi():
+    pass
+
+
+def test_trix():
+    pass
+
+
+def test_ultosc():
+    pass
+
+
+def test_willr():
+    pass
+
+
+# TODO Finish test implementation
