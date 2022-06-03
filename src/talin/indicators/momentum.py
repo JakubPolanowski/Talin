@@ -5,11 +5,11 @@ from src.talin.stats import simple_stats
 from src.talin.indicators import volatility
 
 __all__ = [
-    "adx", "plus_dm", "minus_dm", "adxr",
-    "di", "dx", "adx", "adxr", "apo", "aroon", "aroon_osc",
-    "bop", "cci", "cmo", "macd", "mfi", "mom", "ppo", "roc",
-    "rocp", "rocr", "rocr100", "rsi", "stochf", "stoch",
-    "stoch_rsi", "trix", "ultosc", "willr",
+    "plus_dm", "minus_dm", "di", "dx", "adx", "adxr",
+    "apo", "aroon", "aroon_osc", "bop", "cci", "cmo",
+    "macd", "mfi", "mom", "ppo", "roc", "rocp", "rocr",
+    "rocr100", "rsi", "stochf", "stoch", "stoch_rsi",
+    "trix", "ultosc", "willr",
 ]
 
 # TODO refactor to explicityly use predominantly use pd Series
