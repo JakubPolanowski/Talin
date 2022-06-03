@@ -12,6 +12,7 @@ openPrice = pd.Series(np.random.rand(size) + 1)
 close = pd.Series(np.random.rand(size) + 1)
 low = pd.Series(close - np.random.rand())
 high = pd.Series(close + np.random.rand())
+vol = pd.Series(np.random.rand(size) + 100)
 
 
 def test_plus_dm():
@@ -310,7 +311,39 @@ def test_macd():
 
 
 def test_mfi():
-    pass
+    """Money Flow Index
+
+                        100
+    MFI = 100 - --------------------
+                1 + Money Flow Ratio
+
+          N Period sum of Positive Money Flow
+    MFR = -----------------------------------
+          N Period sum of Negative Money Flow
+
+    Raw Money Flow = Typical Price * Volume
+
+    Money Flow is positive if typical price > previous typical price and vice versa
+
+    source: https://www.investopedia.com/terms/m/mfi.asp
+    """
+
+    typical = simple_stats.typical_price(high, low, close)
+    raw_money_flow = typical * vol
+
+    pos_mf = raw_money_flow.mask(typical < typical.shift(1), 0)
+    neg_mf = raw_money_flow.mask(typical > typical.shift(1), 0)
+
+    # first value is negative since cannot compare previous of first typ price
+    pos_mf.loc[pos_mf.index[0]] = np.NaN
+    neg_mf.loc[pos_mf.index[0]] = np.NaN
+
+    for i in range(1, 21):
+        mfr = pos_mf.rolling(i).sum() / neg_mf.rolling(i).sum()
+        mfi = 100 - (100 / (1 + mfr))
+
+        assert all(mfi.dropna() - momentum.mfi(high,
+                   low, close, vol, periods=i).dropna())
 
 
 def test_mom():
