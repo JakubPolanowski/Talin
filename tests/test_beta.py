@@ -4,6 +4,10 @@ import pandas as pd
 import pytest
 from sklearn.linear_model import LinearRegression
 
+"""
+Source: https://corporatefinanceinstitute.com/resources/knowledge/finance/beta-coefficient/
+"""
+
 PRECISION = 6
 
 stock = np.arange(1, 101) * np.random.random(100)
