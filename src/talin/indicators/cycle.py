@@ -8,4 +8,6 @@ HT_PHASOR            Hilbert Transform - Phasor Components
 HT_SINE              Hilbert Transform - SineWave
 HT_TRENDMODE         Hilbert Transform - Trend vs Cycle Mode
 
+Indicator: Even Better SineWave (EBSW)
+
 """
