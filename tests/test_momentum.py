@@ -10,17 +10,6 @@ low = pd.Series(close - np.random.rand())
 high = pd.Series(close + np.random.rand())
 
 
-"""
-TODO Implement
-
-"plus_dm", "minus_dm", "di", "dx", "adx", "adxr",
-"apo", "aroon", "aroon_osc", "bop", "cci", "cmo",
-"macd", "mfi", "mom", "ppo", "roc", "rocp", "rocr",
-"rocr100", "rsi", "stochf", "stoch", "stoch_rsi",
-"trix", "ultosc", "willr",
-"""
-
-
 def test_plus_dm():
     """+Direction Movement
 
@@ -130,4 +119,28 @@ def test_adx():
 
 
 def test_adxr():
-    pass
+    """Average Directional Movement Rating
+
+    ADXR = (ADX - ADX N Periods Ago) / 2
+
+    Typically 14 period lookback
+
+    Source: https://www.marketvolume.com/technicalanalysis/adxr.asp
+    """
+
+    adx = momentum.adx(high, low, close, periods=14)
+
+    for i in range(1, 21):
+        adxr = (adx - adx.shift(i)) / 2
+        assert all(adxr.dropna() == momentum.adxr(adx, periods=i))
+
+
+"""
+TODO Implement
+
+"plus_dm", "minus_dm", "di", "dx", "adx", "adxr",
+"apo", "aroon", "aroon_osc", "bop", "cci", "cmo",
+"macd", "mfi", "mom", "ppo", "roc", "rocp", "rocr",
+"rocr100", "rsi", "stochf", "stoch", "stoch_rsi",
+"trix", "ultosc", "willr",
+"""
