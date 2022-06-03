@@ -1,3 +1,4 @@
+import enum
 import numpy as np
 import pandas as pd
 from src.talin.indicators import momentum
@@ -153,7 +154,48 @@ def test_apo():
 
 
 def test_aroon():
-    pass
+    """Aroon Indicator
+
+                (N Periods - Periods Since N Period period High)
+    Aroon Up =   ----------------------------------------------  * 100
+                                  N Periods
+
+                  (N Periods - Periods Since N Period period Low)
+    Aroon Down =   ---------------------------------------------  * 100
+                                    N Periods
+
+    Source: https://www.investopedia.com/terms/a/aroon.asp#:~:text=The%20Aroon%20indicator%20is%20a,lows%20over%20a%20time%20period.
+
+    https://www.fidelity.com/learning-center/trading-investing/technical-analysis/technical-indicator-guide/aroon-indicator
+
+    Note: test implementation is designed for simplicity not efficiency 
+    """
+
+    n_periods = [3, 15, 25]
+
+    for n_period in n_periods:
+        up_count = []
+        down_count = []
+
+        for i in range(size):
+            if i < n_period - 1:
+                up_count.append(np.NaN)
+                down_count.append(np.NaN)
+            else:
+                high_slice = high.value[i-n_period:i]
+                low_slice = low.value[i-n_period:i]
+
+                up_count.append(np.argmax(high_slice) + i)
+                down_count.append(np.argmin(low_slice) + i)
+
+        aroon_up = (n_period - pd.Series(up_count)) / n_period * 100
+        aroon_down = (n_period - pd.Series(down_count)) / n_period * 100
+
+        implement_a_up, implemented_a_down = momentum.aroon(
+            high, low, periods=n_period)
+
+        assert all(aroon_down.dropna() == implemented_a_down.dropna())
+        assert all(aroon_up.dropna() == implement_a_up.dropna())
 
 
 def test_aroon_osc():
