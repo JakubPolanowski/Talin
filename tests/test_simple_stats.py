@@ -32,8 +32,38 @@ def test_std_ddof():
 
 
 def test_typical_price():
-    assert simple_stats.typical_price(10, 5, 3).values[0] == 6
+    """Typical price is a simple ratio
+
+          (CurrentHigh + CurrentLow + CurrentClose)
+    TP =   ---------------------------------------
+                            3
+
+    Source: https://www.fidelity.com/learning-center/trading-investing/technical-analysis/technical-indicator-guide/typical-price
+    """
+
+    close = pd.Series(np.random.rand(100) + 1)
+    low = pd.Series(close - np.random.rand())
+    high = pd.Series(close + np.random.rand())
+
+    tp = (high + low + close) / 3
+
+    assert tp == simple_stats.typical_price(high, low, close)
 
 
 def test_weighted_close():
-    assert simple_stats.weighted_close(10, 5, 3).values[0] == 5.25
+    """Weighted close is another simple ratio
+
+                    (High + Low + Close*2)
+    Weight_Close =   --------------------
+                              4
+
+    Source: https://www.incrediblecharts.com/indicators/weighted_close.php
+    """
+
+    close = pd.Series(np.random.rand(100) + 1)
+    low = pd.Series(close - np.random.rand())
+    high = pd.Series(close + np.random.rand())
+
+    wc = (high + low + close*2) / 4
+
+    assert wc == simple_stats.weighted_close(high, low, close)
