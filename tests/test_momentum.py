@@ -521,7 +521,53 @@ def test_trix():
 
 
 def test_ultosc():
-    pass
+    """Ultimate Oscillator
+
+          A7 [Short] * 4 + A14 [Middle] * 2 + A28 [Long]
+    UO = ------------------------------------------------ * 100
+                             4 + 2 + 1
+
+    Where
+
+    A_N = Sum of BP / Sum of TR [true range]
+
+    BP [Buying Pressure] = Close - Min(Low, Previous Close)
+
+    source: https://www.investopedia.com/terms/u/ultimateoscillator.asp
+
+    https://www.investopedia.com/terms/u/ultimateoscillator.asp
+
+    # Note test implementation is not intended to be efficient, rather simple
+    """
+
+    # fist value is nan due to prev Close of first not existing
+    minLowPC = [np.NaN]
+    for i in range(1, close.size):
+        if low[i] < close[i-1]:
+            minLowPC.append(low[i])
+        else:
+            minLowPC.append(close[i-1])
+
+    minLowPC = np.array(minLowPC)
+    buy_pressure = close - minLowPC
+
+    true_range = volatility.trange(high, low, close)
+
+    shorts = [3, 7, 12]
+    mids = [7, 14, 21]
+    longs = [14, 28, 42]
+
+    for short, mid, long in zip(shorts, mids, longs):
+        avgShort = buy_pressure.rolling(
+            short).sum() / true_range.rolling(short).sum()
+        avgMid = buy_pressure.rolling(
+            mid).sum() / true_range.rolling(mid).sum()
+        avgLong = buy_pressure.rolling(
+            long).sum() / true_range.rolling(long).sum()
+
+        ultosc = (avgShort * 4 + avgMid * 2 + avgLong) / 5 * 100
+        assert all(ultosc.dropna() == momentum.ultosc(
+            high, low, close, periods1=short, periods2=mid, periods3=long).dropna())
 
 
 def test_willr():
