@@ -115,7 +115,8 @@ def test_adx():
 
     for i in range(1, 21):
         adx = dx.rolling(i).mean()
-        assert all(adx.dropna() == momentum.adx(high, low, close, periods=i))
+        assert all(adx.dropna() == momentum.adx(
+            high, low, close, periods=i).dropna())
 
 
 def test_adxr():
@@ -132,13 +133,47 @@ def test_adxr():
 
     for i in range(1, 21):
         adxr = (adx - adx.shift(i)) / 2
-        assert all(adxr.dropna() == momentum.adxr(adx, periods=i))
+        assert all(adxr.dropna() == momentum.adxr(adx, periods=i).dropna())
+
+
+def test_apo():
+    """Absolute Price Oscillator
+
+    APO = Shorter Period EMA - Longer Period EMA
+    """
+
+    for i in range(1, 21):
+        apo = close.ewm(span=i, adjust=False).mean() - \
+            close.ewm(span=i+5, adjust=False).mean()
+
+        assert all(apo.dropna() == momentum.apo(
+            close, short_periods=i, long_periods=i+5).dropna())
+    pass
+
+
+def test_aroon():
+    pass
+
+
+def test_aroon_osc():
+    pass
+
+
+def test_bop():
+    pass
+
+
+def test_cci():
+    pass
+
+
+def test_cmo():
+    pass
 
 
 """
 TODO Implement
 
-"plus_dm", "minus_dm", "di", "dx", "adx", "adxr",
 "apo", "aroon", "aroon_osc", "bop", "cci", "cmo",
 "macd", "mfi", "mom", "ppo", "roc", "rocp", "rocr",
 "rocr100", "rsi", "stochf", "stoch", "stoch_rsi",
