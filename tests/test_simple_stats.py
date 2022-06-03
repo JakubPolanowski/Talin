@@ -47,7 +47,7 @@ def test_typical_price():
 
     tp = (high + low + close) / 3
 
-    assert tp == simple_stats.typical_price(high, low, close)
+    assert all(tp == simple_stats.typical_price(high, low, close))
 
 
 def test_weighted_close():
@@ -66,4 +66,4 @@ def test_weighted_close():
 
     wc = (high + low + close*2) / 4
 
-    assert wc == simple_stats.weighted_close(high, low, close)
+    assert all(wc == simple_stats.weighted_close(high, low, close))
