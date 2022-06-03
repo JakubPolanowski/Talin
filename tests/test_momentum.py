@@ -496,7 +496,28 @@ def test_stoch_rsi():
 
 
 def test_trix():
-    pass
+    """Triple Exponential Average
+
+            EMA3 - previous EMA3
+    TRIX = ----------------------
+               previous EMA3
+
+
+    EMA1 = EMA of price over N Periods
+    EMA2 = EMA of EMA1 over N Periods
+    EMA3 = EMA of EMA2 over N Periods
+
+    Source: https://www.investopedia.com/terms/t/trix.asp#:~:text=The%20triple%20exponential%20average%20(TRIX)%20indicator%20is%20an%20oscillator%20used,are%20considered%20insignificant%20or%20unimportant.
+    """
+
+    for i in range(1, 21):
+        ema1 = close.ewm(span=i, adjust=False).mean()
+        ema2 = ema1.ewm(span=i, adjust=False).mean()
+        ema3 = ema2.ewm(span=i, adjust=False).mean()
+
+        trix = (ema3 - ema3.shift(1)) / ema3.shift(1)
+
+        assert all(trix.dropna() == momentum.trix(close, periods=i).dropna())
 
 
 def test_ultosc():
