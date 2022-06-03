@@ -1,4 +1,3 @@
-from re import A
 import numpy as np
 import pandas as pd
 from src.talin.stats import simple_stats
