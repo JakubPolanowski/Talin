@@ -571,7 +571,21 @@ def test_ultosc():
 
 
 def test_willr():
-    pass
+    """Williams Percent Range
 
+                           Highest High in N Periods - Close
+    Williams %R = -----------------------------------------------------
+                   Highest High in N Periods - Lowest Low in N Periods
 
-# TODO Finish test implementation
+    Typically 14 periods
+
+    Source: https://www.investopedia.com/terms/w/williamsr.asp
+    """
+
+    for i in range(1, 21):
+        hh = high.rolling(i).max()
+        ll = low.rolling(i).min()
+
+        willr = (hh - close) / (hh - ll)
+        assert all(willr.dropna() == momentum.willr(
+            high, low, close, periods=i).dropna())
