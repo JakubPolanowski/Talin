@@ -6,6 +6,7 @@ from src.talin.indicators import momentum
 from src.talin.indicators import volatility
 
 size = 100
+openPrice = pd.Series(np.random.rand(size) + 1)
 close = pd.Series(np.random.rand(size) + 1)
 low = pd.Series(close - np.random.rand())
 high = pd.Series(close + np.random.rand())
@@ -166,11 +167,12 @@ def test_aroon():
 
     Typically 25
 
-    Source: https://www.investopedia.com/terms/a/aroon.asp#:~:text=The%20Aroon%20indicator%20is%20a,lows%20over%20a%20time%20period.
+    #:~:text=The%20Aroon%20indicator%20is%20a,lows%20over%20a%20time%20period.
+    Source: https://www.investopedia.com/terms/a/aroon.asp
 
     https://www.fidelity.com/learning-center/trading-investing/technical-analysis/technical-indicator-guide/aroon-indicator
 
-    Note: test implementation is designed for simplicity not efficiency 
+    Note: test implementation is designed for simplicity not efficiency
     """
 
     n_periods = [3, 15, 25]
@@ -217,7 +219,16 @@ def test_aroon_osc():
 
 
 def test_bop():
-    pass
+    """Balance of Power
+
+    BOP = (Close - Open) / (High - Low)
+
+    Source: https://school.stockcharts.com/doku.php?id=technical_indicators:balance_of_power
+    """
+
+    bop = (close - openPrice) / (high - low)
+
+    assert all(bop == momentum.bop(high, low, openPrice, close))
 
 
 def test_cci():
