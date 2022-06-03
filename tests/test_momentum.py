@@ -290,10 +290,52 @@ def test_cmo():
         assert all(cmo.dropna() == momentum.cmo(close, periods=i).dropna())
 
 
+def test_macd():
+    """MACD
+
+    MACD = 12-Period (Short) EMA - 26 Period (Long) EMA
+
+    source: https://www.investopedia.com/terms/m/macd.asp
+    """
+
+    shorts = [6, 12, 18]
+    longs = [13, 26, 52]
+
+    for short, long in zip(shorts, longs):
+        macd = close.ewm(span=short, adjust=False).mean() - \
+            close.ewm(span=long, adjust=False).mean()
+
+        assert all(macd.dropna() == momentum.macd(
+            close, short_periods=short, long_periods=long).dropna())
+
+
+def test_mfi():
+    pass
+
+
+def test_mom():
+    pass
+
+
+def test_ppo():
+    pass
+
+
+def test_roc():
+    pass
+
+
+def test_rocp():
+    pass
+
+
+def test_rocr():
+    pass
+
+
 """
 TODO Implement
 
-"apo", "aroon", "aroon_osc", "bop", "cci", "cmo",
 "macd", "mfi", "mom", "ppo", "roc", "rocp", "rocr",
 "rocr100", "rsi", "stochf", "stoch", "stoch_rsi",
 "trix", "ultosc", "willr",
