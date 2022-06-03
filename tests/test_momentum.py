@@ -140,6 +140,8 @@ def test_apo():
     """Absolute Price Oscillator
 
     APO = Shorter Period EMA - Longer Period EMA
+
+    Source: https://www.fidelity.com/learning-center/trading-investing/technical-analysis/technical-indicator-guide/apo
     """
 
     for i in range(1, 21):
@@ -148,7 +150,6 @@ def test_apo():
 
         assert all(apo.dropna() == momentum.apo(
             close, short_periods=i, long_periods=i+5).dropna())
-    pass
 
 
 def test_aroon():
