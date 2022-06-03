@@ -431,7 +431,24 @@ def test_rsi():
 
 
 def test_stochf():
-    pass
+    """Fast Stochasitic Indicator (%K)
+
+                    Close - Lowest Low for N Periods
+    %K =  ----------------------------------------------------- * 100
+          Highest High for N Periods - Lowest Low for N Periods
+
+    source: https://www.fidelity.com/learning-center/trading-investing/technical-analysis/technical-indicator-guide/fast-stochastic
+
+    https://www.investopedia.com/ask/answers/05/062405.asp
+    """
+
+    for i in range(1, 21):
+        ll = low.rolling(i).min()
+        hh = high.rolling(i).max()
+
+        K = (close - ll) / (hh - ll) * 100
+
+        assert all(K.dropna() == momentum.stochf(high, low, close, periods=i))
 
 
 def test_stoch():
