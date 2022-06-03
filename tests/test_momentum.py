@@ -2,8 +2,10 @@ import enum
 import numpy as np
 import pandas as pd
 from src.talin.indicators import momentum
-# note testing handle by test_volatility
+# note testing handled by test_volatility
 from src.talin.indicators import volatility
+# note testing handled by test_simple_stats
+from src.talin.stats import simple_stats
 
 size = 100
 openPrice = pd.Series(np.random.rand(size) + 1)
@@ -232,7 +234,29 @@ def test_bop():
 
 
 def test_cci():
-    pass
+    """Commodity Channel Index
+
+           Typical Price - Simple Moving Average of Typical Price
+    CCI =  -------------------------------------
+                 0.015 * Mean Deviation
+
+    Mean Deviation = SMA(|Typical Price - SMA Typical Price|)
+
+    Typically Lookback periods = 20
+
+    source: https://www.investopedia.com/terms/c/commoditychannelindex.asp
+    """
+
+    typical = simple_stats.typical_price(high, low, close)
+
+    for i in range(1, 21):
+        sma = typical.rolling(i).mean()
+        mean_dev = (typical - sma).rolling(i).mean()
+
+        cci = (typical - sma) / (0.015 * mean_dev)
+
+        assert all(cci.dropna() == momentum.cci(
+            high, low, close, periods=i).dropna())
 
 
 def test_cmo():
