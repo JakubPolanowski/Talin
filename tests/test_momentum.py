@@ -385,7 +385,20 @@ def test_ppo():
 
 
 def test_roc():
-    pass
+    """Price Rate of Change Indicator
+
+           Closing Price - Closing Price N periods ago
+    ROC =  ------------------------------------------- * 100
+                      Closing Price N periods ago
+
+    Typically 12, 25, or 200, but can vary
+
+    Source: https://www.investopedia.com/terms/p/pricerateofchange.asp
+    """
+
+    for i in range(1, 51):
+        roc = (close - close.shift(i)) / close.shift(i) * 100
+        assert all(roc.dropna() == momentum.roc(close, periods=i).dropna())
 
 
 def test_rocp():
