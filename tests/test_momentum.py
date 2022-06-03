@@ -362,7 +362,26 @@ def test_mom():
 
 
 def test_ppo():
-    pass
+    """Percentage Price Oscillator
+
+           9 Day (short) EMA - 26 Day (long) EMA
+    PPO =  -------------------------------------
+                      26 Day (long) EMA
+
+    price typically being the closing price
+
+    source: https://www.investopedia.com/articles/investing/051214/use-percentage-price-oscillator-elegant-indicator-picking-stocks.asp
+    """
+
+    shorts = [6, 9, 12]
+    longs = [13, 26, 52]
+
+    for short, long in zip(shorts, longs):
+        long_ema = close.ewm(span=long, adjust=False).mean()
+        ppo = (close.ewm(span=short, adjust=False).mean() - long_ema) / long_ema
+
+        assert all(ppo.dropna() == momentum.ppo(
+            close, short_periods=short, long_periods=long).dropna())
 
 
 def test_roc():
