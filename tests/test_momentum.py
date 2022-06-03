@@ -22,7 +22,7 @@ TODO Implement
 
 
 def test_plus_dm():
-    """+Direction Indicator
+    """+Direction Movement
 
     +DM = Current High - Previous High
 
@@ -34,7 +34,7 @@ def test_plus_dm():
 
 
 def test_minus_dm():
-    """-Direction Indicator
+    """-Direction Movement
 
     -DM = Previous Low - Current Low
 
@@ -45,11 +45,45 @@ def test_minus_dm():
 
 
 def test_di_minus():
-    pass
+    """-Direction Indicator
+
+             (Smoothed -DM)
+    -DI =  ------------------  * 100
+          (Average True Range)
+
+    Smoothing window same between Average True Range (ATR) and Smoothed -DM,
+    typically 14 days
+
+    source: https://www.investopedia.com/terms/a/adx.asp
+    """
+
+    nDM = momentum.minus_dm(low)
+
+    for i in range(1, 21):
+        atr = volatility.atr(high, low, close, periods=i)
+        nDI = nDM.rolling(i).mean() / atr * 100
+        assert all(nDI == momentum.di(nDM, atr, periods=i))
 
 
 def test_di_plus():
-    pass
+    """+Direction Indicator
+
+             (Smoothed +DM)
+    +DI =  ------------------  * 100
+          (Average True Range)
+
+    Smoothing window same between Average True Range (ATR) and Smoothed +DM,
+    typically 14 days
+
+    source: https://www.investopedia.com/terms/a/adx.asp
+    """
+
+    pDM = momentum.plus_dm(high)
+
+    for i in range(1, 21):
+        atr = volatility.atr(high, low, close, periods=i)
+        pDI = pDM.rolling(i).mean() / atr * 100
+        assert all(pDI == momentum.di(pDM, atr, periods=i))
 
 
 def test_dx():
