@@ -5,7 +5,7 @@ from src.talin.stats import simple_stats
 from src.talin.indicators import volatility
 
 __all__ = [
-    "adx", "positive_DM", "negative_DM", "adxr",
+    "adx", "plus_dm", "minus_dm", "adxr",
     "di", "dx", "adx", "adxr", "apo", "aroon", "aroon_osc",
     "bop", "cci", "cmo", "macd", "mfi", "mom", "ppo", "roc",
     "rocp", "rocr", "rocr100", "rsi", "stochf", "stoch",
@@ -15,7 +15,7 @@ __all__ = [
 # TODO refactor to explicityly use predominantly use pd Series
 
 
-def positive_DM(high):
+def plus_dm(high):
     """Calculates the Positive Directional Movement. Note that the highs must be a list of numbers or similar object (numpy array, pandas series, etc.)
 
     Args:
@@ -31,7 +31,7 @@ def positive_DM(high):
     return pDM
 
 
-def negative_DM(low):
+def minus_dm(low):
     """Calculates the Negative Directional Movement. Note that the lows must be a list of numbers or similar object (numpy array, pandas series, etc.)
 
     Args:
@@ -90,8 +90,8 @@ def adx(high, low, close, loopback=14):
         (pandas Series, pandas Series, pandas Series): Returns a tuple of the positive directional indicator, the negative direction indicator, and the average directional index
     """
 
-    pDM = positive_DM(high)
-    nDM = negative_DM(low)
+    pDM = plus_dm(high)
+    nDM = minus_dm(low)
 
     avgTR = volatility.atr(high, low, np.r_[np.NaN, close[:-1]], loopback)
 
