@@ -260,7 +260,34 @@ def test_cci():
 
 
 def test_cmo():
-    pass
+    """Chande Momentum Oscillator
+
+          sH - sL
+    CMO = ------- * 100
+          sH + sL
+
+    where
+
+    sH = sum of higher closes (gains delta) over N periods
+    sL = sum of lower closes (losses delta) over N Periods
+
+    source: https://www.investopedia.com/terms/c/chandemomentumoscillator.asp
+
+    https://www.fidelity.com/learning-center/trading-investing/technical-analysis/technical-indicator-guide/cmo#:~:text=The%20CMO%20indicator%20is%20created,%2D100%20to%20%2B100%20range.
+    """
+
+    diff = close.diff()
+
+    gains = diff.mask(close < close.shift(1), 0)
+    loss = diff.mask(close > close.shift(1), 0).abs()
+
+    for i in range(1, 21):
+        sH = gains.rolling(i).sum()
+        sL = loss.rolling(i).sum()
+
+        cmo = (sH - sL) / (sH + sL) / 100
+
+        assert all(cmo.dropna() == momentum.cmo(close, periods=i).dropna())
 
 
 """
