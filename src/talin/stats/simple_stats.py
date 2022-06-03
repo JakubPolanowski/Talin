@@ -1,4 +1,4 @@
-import numpy as np
+import pandas as pd
 
 __all__ = ["average", "median", "var",
            "std", "typical_price", "weighted_close"]
@@ -6,85 +6,85 @@ __all__ = ["average", "median", "var",
 # * Note the inclusion of average, median, var, and stdev is effectively redudant however they are included for the purpose of giving a consistent API
 
 
-def average(list):
-    """Returns average of a sequence of numbers. Note that this function just calls  the numpy.average function.
+def average(series: pd.Series) -> float:
+    """Returns average of a series of numbers. Note that this function just calls  the pd.Series.mean function.
 
     Args:
-        list (sequence of numbers): List of numbers to average (for instance price)
+        series (pd.Series): Series of numbers
 
     Returns:
-        Number: Average of list
+        float: Average of series
     """
 
-    return np.average(list)
+    return series.mean()
 
 
-def median(list):
-    """Returns median of a sequence of numbers. Note that this function just calls the numpy.median function
+def median(series: pd.Series) -> float:
+    """Returns median of a series. Note that this function just calls the pd.Series.median function
 
     Args:
-        list (sequence of numbers): List of numbers to get the median of (for instance price)
+        series (pd.Series): Series of numbers
 
     Returns:
-        Number: Median of List
+        float: Median of List
     """
 
-    return np.median(list)
+    return series.median()
 
 
-def var(list, ddof=1):
-    """Returns the variance of a sequence of numbers. Note that this function just calls the numpy.var function. By default returns the sample variance (ddof=1).
+def var(series: pd.Series, ddof=1) -> float:
+    """Returns the variance of a series. Note that this function just calls the pd.Series.var function. By default returns the sample variance (ddof=1).
 
     Args:
-        list (sequence of numbers): List of numbers to calculate the standard deviation of
+        series (pd.Series): Series of numbers
         ddof (int, optional): Degrees of freedom. Defaults to 1.
 
     Returns:
-        Number: Variance of input list
+        float: Variance of input list
     """
 
-    return np.var(list, ddof=ddof)
+    return series.var(ddof=ddof)
 
 
-def std(list, ddof=1):
-    """Returns the standard deviation of a sequence of numbers. Note that this function just calls the numpy.std function. By default returns the sample standard deviation (ddof=1).
+def std(series: pd.Series, ddof=1) -> float:
+    """Returns the standard deviation of a series. Note that this function just calls the pd.Series.std function. By default returns the sample standard deviation (ddof=1).
 
     Args:
-        list (sequence of numbers): List of numbers to calculate the standard deviation of
+        series (pd.Series): Series of numbers
         ddof (int, optional): Degrees of freedom. Defaults to 1.
 
     Returns:
         Number: Standard deviation of input list
     """
 
-    return np.std(list, ddof=ddof)
+    return series.std(ddof=ddof)
 
 
-def typical_price(high, low, close):
-    """Returns the typical price based on the period's (ex. day's) high, low, and close values. Multiple values can be calculated by passing in equal shaped numpy arrays for high, low, and close.
+def typical_price(high: pd.Series, low: pd.Series, close: pd.Series) -> pd.Series:
+    """Returns the typical price based on the high, low, and close. 
 
     Args:
-        high (number or numpy array of numbers): High of period
-        low (number or numpy array of numbers): Low of period
-        close (number or numpy array of numbers): Close of period
+        high (pd.Series): Series of highs
+        low (pd.Series): Series of lows
+        close (pd.Series): Series of closes 
 
     Returns:
-        Number or numpy array: Typical Price of period/periods (if inputs were numpy arrays or requivalent)
+        pd.Series: Typical Price series
     """
 
     return (high + low + close)/3
 
 
-def weighted_close(high, low, close):
-    """Returns the weighted close based on the period's (ex. day's) high, low, and close values. Multiple values can be calculated by passing in equal shaped numpy arrays for high, low, and close.
+def weighted_close(high: pd.Series, low: pd.Series, close: pd.Series) -> pd.Series:
+    """Returns the weighted close on the high, low, and close.
 
     Args:
-        high (number or numpy array of numbers): High of period
-        low (number or numpy array of numbers): Low of period
-        close (number or numpy array of numbers): Close of period
+        high (pd.Series): Series of highs
+        low (pd.Series): Series of lows
+        close (pd.Series): Series of closes 
 
     Returns:
-        Number or numpy array: Weighted Close of period/periods (if inputs were numpy arrays or equivalent)
+        pd.Series: Weighted Close series
     """
 
     return (high + low + close*2)/4
