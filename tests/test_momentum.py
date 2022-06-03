@@ -30,7 +30,7 @@ def test_plus_dm():
     """
 
     pDM = high - high.shift(1)
-    assert all(pDM == momentum.plus_dm(high))
+    assert all(pDM.dropna() == momentum.plus_dm(high).dropna())
 
 
 def test_minus_dm():
@@ -41,7 +41,7 @@ def test_minus_dm():
     source: https://www.investopedia.com/terms/a/adx.asp
     """
     nDM = low.shift(1) - low
-    assert all(nDM == momentum.minus_dm(low))
+    assert all(nDM.dropna() == momentum.minus_dm(low).dropna())
 
 
 def test_di_minus():
@@ -62,7 +62,7 @@ def test_di_minus():
     for i in range(1, 21):
         atr = volatility.atr(high, low, close, periods=i)
         nDI = nDM.rolling(i).mean() / atr * 100
-        assert all(nDI == momentum.di(nDM, atr, periods=i))
+        assert all(nDI.dropna() == momentum.di(nDM, atr, periods=i).dropna())
 
 
 def test_di_plus():
@@ -83,11 +83,28 @@ def test_di_plus():
     for i in range(1, 21):
         atr = volatility.atr(high, low, close, periods=i)
         pDI = pDM.rolling(i).mean() / atr * 100
-        assert all(pDI == momentum.di(pDM, atr, periods=i))
+        assert all(pDI.dropna() == momentum.di(pDM, atr, periods=i).dropna())
 
 
 def test_dx():
-    pass
+    """Directional Index
+
+          (|+DI - -DI|)
+    DX =   -----------  * 100
+          (|+DI + -DI|)
+
+    source: https://www.investopedia.com/terms/a/adx.asp
+    """
+
+    pDM = momentum.plus_dm(high)
+    nDM = momentum.minus_dm(low)
+    atr = volatility.atr(high, low, close, periods=14)
+
+    pDI = momentum.di(pDM, atr, periods=14)
+    nDI = momentum.di(nDI, atr, periods=14)
+
+    dx = ((pDI - nDI).abs() / (pDI + nDI).abs()) * 100
+    assert all(dx.dropna() == momentum.dx(pDI, nDI).dropna())
 
 
 def test_adx():
