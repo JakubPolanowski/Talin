@@ -2,8 +2,6 @@ from src.talin.indicators import volume
 import numpy as np
 import pandas as pd
 
-# TODO test ad and adosc
-
 
 def test_ad():
     """AD (Accumulation/Distribution Formula)
