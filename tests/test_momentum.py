@@ -164,6 +164,8 @@ def test_aroon():
     Aroon Down =   ---------------------------------------------  * 100
                                     N Periods
 
+    Typically 25
+
     Source: https://www.investopedia.com/terms/a/aroon.asp#:~:text=The%20Aroon%20indicator%20is%20a,lows%20over%20a%20time%20period.
 
     https://www.fidelity.com/learning-center/trading-investing/technical-analysis/technical-indicator-guide/aroon-indicator
@@ -199,7 +201,19 @@ def test_aroon():
 
 
 def test_aroon_osc():
-    pass
+    """Aroon Oscillator
+
+    AROON OSC = AROON Up - AROON Down
+
+    source: https://school.stockcharts.com/doku.php?id=technical_indicators:aroon_oscillator
+    """
+
+    aroon_up, aroon_down = momentum.aroon(high, low, periods=25)
+
+    aroon_osc = aroon_up - aroon_down
+
+    assert all(aroon_osc.dropna() == momentum.aroon_osc(
+        high, low, periods=25).dropna())
 
 
 def test_bop():
