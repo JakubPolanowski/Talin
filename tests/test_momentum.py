@@ -102,22 +102,31 @@ def test_dx():
 def test_adx():
     """Average Directional Movement Index
 
-    ADX = N-period Simple Moving Average of DX
+           (Prior ADX * periods-1) + Current DX
+    ADX =  ------------------------------------
+                         periods
+
+    for instance periods can be 14.
+
+    first ADX = average of first 14 DX
 
     source: https://www.investopedia.com/terms/a/adx.asp
     """
 
-    pDM = momentum.plus_dm(high)
-    nDM = momentum.minus_dm(low)
-    atr = volatility.atr(high, low, close, periods=14)
-
-    pDI = momentum.di(pDM, atr, periods=14)
-    nDI = momentum.di(nDM, atr, periods=14)
+    pDI, nDI = momentum.di(high, low, close, periods=14)
 
     dx = momentum.dx(pDI, nDI)
 
     for i in range(1, 21):
-        adx = dx.rolling(i).mean()
+
+        adx = [np.NaN] * i-1 + [np.mean(dx.values[:i])]
+
+        for i in range(i+1, dx.size):
+            adx.append(
+                ((adx[i-1] * i-1) + dx.values[i]) / i
+            )
+
+        adx = pd.Series(adx)
         assert all(adx.dropna() == momentum.adx(
             high, low, close, periods=i).dropna())
 
