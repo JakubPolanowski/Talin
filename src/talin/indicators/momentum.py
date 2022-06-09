@@ -17,7 +17,7 @@ def plus_dm(high: pd.Series) -> pd.Series:
     """Calculates the Positive Directional Movement
 
     Args:
-        high (pd.Series): list of highs
+        high (pd.Series): highs series
 
     Returns:
         pd.Series: positive directional movement
@@ -32,7 +32,7 @@ def plus_dm(high: pd.Series) -> pd.Series:
 def minus_dm(low: pd.Series) -> pd.Series:
     """Calculates the Negative Directional Movement.
     Args:
-        low (pd.Series): list of lows
+        low (pd.Series): lows series
 
     Returns:
         pd.Series: negative directional movement
@@ -44,19 +44,24 @@ def minus_dm(low: pd.Series) -> pd.Series:
     return nDM
 
 
-def di(dm, avgTR, loopback=14):
-    """Calculates the (postive or negative) Directional indicator. Note that dm and avgTR must be numpy arrays or similar objects such as pandas series.
+def di(high: pd.Series, low: pd.Series, close: pd.Series, periods=14) -> tuple[pd.Series, pd.Series]:
+    """Calculates the (postive or negative) Directional indicator.
 
     Args:
-        dm (numpy array): the positive or negative directional movement
-        avgTR (numpy array): average true range
-        loopback (int): The number of periods to use as the window. Defaults to 14.
+        high (pd.Series): highs series
+        low (pd.Series): lows series
+        close (pd.Series): closes series
+        periods (int, optional): The number of periods to lookback/use as the rolling average window. Defaults to 14.
 
     Returns:
-        pandas series: postive or negative (depending on the directional movement input) directional indicator.
+        tuple[pd.Series, pd.Series]: returns a tuple of (positive DI, negative DI) series.
     """
 
-    return 100 * (pd.Series(dm).ewm(alpha=1/loopback).mean() / avgTR)
+    atr = volatility.atr(high, low, close, periods)
+    pDI = plus_dm(high).rolling(periods).mean() / atr * 100
+    nDI = minus_dm(low).rolling(periods).mean() / atr * 100
+
+    return pDI, nDI
 
 
 def dx(pDI, nDI):
