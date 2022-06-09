@@ -64,15 +64,14 @@ def di(high: pd.Series, low: pd.Series, close: pd.Series, periods=14) -> tuple[p
     return pDI, nDI
 
 
-def dx(pDI, nDI):
-    """Calculates the Directional Movement Index given the postive and negative Directional Indicators. Note that these must be given numerical lists that can be converted to pandas Series or are already pandas Series.
-
+def dx(pDI: pd.Series, nDI: pd.Series) -> pd.Series:
+    """Calculates the Directional Movement Index given the postive and negative Directional Indicators.
     Args:
-        pDI (Numerical List): positive Directional Indicator
-        nDI (Numierlca List): negative Directional Indicator
+        pDI (pd.Series): positive Directional Indicator
+        nDI (pd.Series): negative Directional Indicator
 
     Returns:
-        pandas Series: Directional Movement Index
+        pd.Series: Directional Movement Index
     """
 
     pDI, nDI = (pd.Series(pDI), pd.Series(nDI))
