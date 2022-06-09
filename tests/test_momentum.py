@@ -20,10 +20,15 @@ def test_plus_dm():
 
     +DM = Current High - Previous High
 
+    Note that all negative values should be zero
+
     source: https://www.investopedia.com/terms/a/adx.asp
+
+    https://school.stockcharts.com/doku.php?id=technical_indicators:average_directional_index_adx
     """
 
     pDM = high - high.shift(1)
+    pDM[pDM < 0] = 0
     assert all(pDM.dropna() == momentum.plus_dm(high).dropna())
 
 
@@ -32,9 +37,14 @@ def test_minus_dm():
 
     -DM = Previous Low - Current Low
 
+    Note that all negative values should be zero
+
     source: https://www.investopedia.com/terms/a/adx.asp
+
+    https://school.stockcharts.com/doku.php?id=technical_indicators:average_directional_index_adx
     """
     nDM = low.shift(1) - low
+    nDM[nDM < 0] = 0
     assert all(nDM.dropna() == momentum.minus_dm(low).dropna())
 
 
