@@ -48,8 +48,8 @@ def test_minus_dm():
     assert all(nDM.dropna() == momentum.minus_dm(low).dropna())
 
 
-def test_di_minus():
-    """-Direction Indicator
+def test_di():
+    """+ and - Direction Indicator
 
              (Smoothed -DM)
     -DI =  ------------------  * 100
@@ -57,20 +57,6 @@ def test_di_minus():
 
     Smoothing window same between Average True Range (ATR) and Smoothed -DM,
     typically 14 days
-
-    source: https://www.investopedia.com/terms/a/adx.asp
-    """
-
-    nDM = momentum.minus_dm(low)
-
-    for i in range(1, 21):
-        atr = volatility.atr(high, low, close, periods=i)
-        nDI = nDM.rolling(i).mean() / atr * 100
-        assert all(nDI.dropna() == momentum.di(nDM, atr, periods=i).dropna())
-
-
-def test_di_plus():
-    """+Direction Indicator
 
              (Smoothed +DM)
     +DI =  ------------------  * 100
@@ -82,12 +68,19 @@ def test_di_plus():
     source: https://www.investopedia.com/terms/a/adx.asp
     """
 
+    nDM = momentum.minus_dm(low)
     pDM = momentum.plus_dm(high)
 
     for i in range(1, 21):
         atr = volatility.atr(high, low, close, periods=i)
+        nDI = nDM.rolling(i).mean() / atr * 100
         pDI = pDM.rolling(i).mean() / atr * 100
-        assert all(pDI.dropna() == momentum.di(pDM, atr, periods=i).dropna())
+
+        implemented_pDI, implemented_nDI = momentum.di(
+            high, low, close, periods=i)
+
+        assert all(nDI.dropna() == implemented_nDI.dropna())
+        assert all(pDI.dropna() == implemented_pDI.dropna())
 
 
 def test_dx():
