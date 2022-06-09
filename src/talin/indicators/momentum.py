@@ -13,34 +13,33 @@ __all__ = [
 # TODO refactor to explicityly use predominantly use pd Series
 
 
-def plus_dm(high):
-    """Calculates the Positive Directional Movement. Note that the highs must be a list of numbers or similar object (numpy array, pandas series, etc.)
+def plus_dm(high: pd.Series) -> pd.Series:
+    """Calculates the Positive Directional Movement
 
     Args:
-        high (Numerical List): list of highs
+        high (pd.Series): list of highs
 
     Returns:
-        numpy array: positive directional movement
+        pd.Series: positive directional movement
     """
 
-    pDM = np.diff(high)
+    pDM = high - high.shift()
     pDM[pDM < 0] = 0
 
     return pDM
 
 
-def minus_dm(low):
-    """Calculates the Negative Directional Movement. Note that the lows must be a list of numbers or similar object (numpy array, pandas series, etc.)
-
+def minus_dm(low: pd.Series) -> pd.Series:
+    """Calculates the Negative Directional Movement.
     Args:
-        low (Numerical List): list of lows
+        low (pd.Series): list of lows
 
     Returns:
-        numpy array: negative directional movement
+        pd.Series: negative directional movement
     """
 
-    nDM = np.diff(low)
-    nDM[nDM > 0] = 0
+    nDM = low.shift() - low
+    nDM[nDM < 0] = 0
 
     return nDM
 
