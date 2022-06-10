@@ -592,8 +592,10 @@ def test_ultosc():
             long).sum() / true_range.rolling(long).sum()
 
         ultosc = (avgShort * 4 + avgMid * 2 + avgLong) / 5 * 100
-        assert all(ultosc.dropna() == momentum.ultosc(
-            high, low, close, periods1=short, periods2=mid, periods3=long).dropna())
+        implemented_ultosc = momentum.ultosc(
+            high, low, close, periods1=short, periods2=mid, periods3=long)
+
+        assert all(ultosc.dropna() == implemented_ultosc.dropna())
 
 
 def test_willr():
