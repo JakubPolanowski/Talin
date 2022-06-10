@@ -353,7 +353,7 @@ def test_mfi():
         mfr = pos_mf.rolling(i).sum() / neg_mf.rolling(i).sum()
         mfi = 100 - (100 / (1 + mfr))
 
-        assert all(mfi.dropna() - momentum.mfi(high,
+        assert all(mfi.dropna() == momentum.mfi(high,
                    low, close, vol, periods=i).dropna())
 
 
