@@ -151,24 +151,27 @@ def apo(close: pd.Series, short_periods=14, long_periods=30) -> pd.Series:
         close.ewm(span=long_periods, adjust=False).mean()
 
 
-def aroon(high, low, periods=25):
+def aroon(high: pd.Series, low: pd.Series, periods=25) -> pd.Series:
     """Calculates the AROON indicator given the lists of highs and lows and the number of periods to use in the calculation.
 
     Args:
-        high (Numerical List): List of highs
-        low (Numerical List): List of lows
+        high (pd.Series): Series of highs
+        low (pd.Series): Series of lows
         periods (int, optional): Number of periods. Defaults to 25.
 
     Returns:
-        (pandas Series, pandas Series): Returns the AROON up and AROON down series.
+        (pd.Series, pd.Series): Returns the AROON up and AROON down series.
+
+    Source: https://www.investopedia.com/terms/a/aroon.asp
     """
 
-    high, low = (pd.Series(high), pd.Series(low))
+    up_dist = high.rolling(periods).apply(
+        lambda x: (periods - 1) - x.argmax())
+    down_dist = low.rolling(periods).apply(
+        lambda x: (periods - 1) - x.argmin())
 
-    aroon_up = 100 * \
-        high.rolling(periods + 1).apply(lambda x: x.argmax()) / periods
-    aroon_down = 100 * \
-        low.rolling(periods + 1).apply(lambda x: x.argmin()) / periods
+    aroon_up = (periods - up_dist) / periods * 100
+    aroon_down = (periods - down_dist) / periods * 100
 
     return aroon_up, aroon_down
 
