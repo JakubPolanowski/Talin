@@ -257,20 +257,22 @@ def cmo(close: pd.Series, periods=9) -> pd.Series:
     return (sH - sL) / (sH + sL) * 100
 
 
-def macd(close, short_periods=12, long_periods=26):
-    """Calculates the Moving Average Convergence Divergence given the input of a list of closes, number of period for short term ema, and number periods for long term ema.
+def macd(close: pd.Series, short_periods=12, long_periods=26) -> pd.Series:
+    """Calculates the Moving Average Convergence Divergence.
 
     Args:
-        close (Numerical List): List of closes
+        close (pd.Series): Series of closes
         short_periods (int, optional): Number of periods for short term ema. Defaults to 12.
         long_periods (int, optional): Number of periods for long term ema. Defaults to 26.
 
     Returns:
-        pandas Series: Moving Average Convergence Diveregence
+        pd.Series: Moving Average Convergence Diveregence
+
+    Source: https://www.investopedia.com/terms/m/macd.asp
     """
 
-    close = pd.Series(close)
-    return close.ewm(alpha=1/short_periods) - close.ewm(alpha=1/long_periods)
+    return close.ewm(span=short_periods, adjust=False).mean() - \
+        close.ewm(span=long_periods, adjust=False).mean()
 
 
 def mfi(high, low, close, volume, periods=14):
