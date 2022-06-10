@@ -17,6 +17,8 @@ def ad(high: pd.Series, low: pd.Series, close: pd.Series, volume: pd.Series) -> 
 
     Returns:
         pd.Series: Chaikin A/D Line series
+
+    Source: https://corporatefinanceinstitute.com/resources/knowledge/trading-investing/accumulation-distribution-indicator-a-d/
     """
 
     # money flow multiplier
@@ -42,6 +44,8 @@ def adosc(high: pd.Series, low: pd.Series, close: pd.Series, volume: pd.Series,
 
     Returns:
         pd.Series: Chaikin A/D Oscillator series
+
+    Source: https://www.investopedia.com/terms/c/chaikinoscillator.asp
     """
 
     ad_line = ad(high, low, close, volume)
@@ -57,6 +61,8 @@ def obv(close: pd.Series, volume: pd.Series) -> pd.Series:
 
     Returns:
         pd.Series: OBV series
+
+    source: https://www.investopedia.com/terms/o/onbalancevolume.asp
     """
 
     obvol = np.where(
