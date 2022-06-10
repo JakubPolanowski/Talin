@@ -18,6 +18,8 @@ def beta(stock: pd.Series, market: pd.Series, pct_change=False) -> float:
 
     Returns:
         float: Beta
+
+    Source: https://corporatefinanceinstitute.com/resources/knowledge/finance/beta-coefficient/
     """
 
     if stock.shape != market.shape:
