@@ -182,7 +182,6 @@ def test_aroon():
 
     Typically 25
 
-    #:~:text=The%20Aroon%20indicator%20is%20a,lows%20over%20a%20time%20period.
     Source: https://www.investopedia.com/terms/a/aroon.asp
 
     https://www.fidelity.com/learning-center/trading-investing/technical-analysis/technical-indicator-guide/aroon-indicator
