@@ -297,7 +297,7 @@ def test_cmo():
         sH = gains.rolling(i).sum()
         sL = loss.rolling(i).sum()
 
-        cmo = (sH - sL) / (sH + sL) / 100
+        cmo = (sH - sL) / (sH + sL) * 100
 
         assert all(cmo.dropna() == momentum.cmo(close, periods=i).dropna())
 
