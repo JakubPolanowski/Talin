@@ -263,7 +263,7 @@ def test_cci():
 
     for i in range(1, 21):
         sma = typical.rolling(i).mean()
-        mean_dev = (typical - sma).rolling(i).mean()
+        mean_dev = (typical - sma).abs().rolling(i).mean()
 
         cci = (typical - sma) / (0.015 * mean_dev)
 
