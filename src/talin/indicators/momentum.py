@@ -343,18 +343,20 @@ def ppo(price: pd.Series, short_periods=12, long_periods=26) -> pd.Series:
     return (short_ema - long_ema) / long_ema
 
 
-def roc(price):
-    """Calculates Rate of Change given list of prices.
+def roc(close: pd.Series, periods=12) -> pd.Series:
+    """Calculates Rate of Change given series of prices.
 
     Args:
-        price (Numerical List): list of prices
+        close (pd.Series): list of closes
+        periods (int, optional): Number of periods to look back. This value depends on the strategy, for instance a long term trader could use periods=200 while a short term trader might use 12. Defaults to 12
 
     Returns:
-        pandas Series: Rate of Change series
+        pd.Series: Rate of Change series
+
+    Source: https://www.investopedia.com/terms/p/pricerateofchange.asp
     """
 
-    price = pd.Series(price)
-    return (price / price.shift(1) - 1) * 100
+    return (close - close.shift(periods)) / close.shift(periods) * 100
 
 
 def rsi(price, periods=14):
