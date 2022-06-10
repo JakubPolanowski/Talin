@@ -193,17 +193,19 @@ def aroon_osc(high: pd.Series, low: pd.Series, periods=25) -> pd.Series:
     return aroon_up - aroon_down
 
 
-def bop(high, low, open, close):
+def bop(high: pd.Series, low: pd.Series, open: pd.Series, close: pd.Series) -> pd.Series:
     """Calculates the Balance of Power indicator, given the input arrays of high, low, open, and close. Note that these input arrays must be numpy arrays or similar objects such as pandas Series
 
     Args:
-        high (numpy array): array of highs
-        low (numpy array): array of lows
-        open (numpy array): array of opens
-        close (numpy array): array of closes
+        high (pd.Series): Series of highs
+        low (pd.Series): Series of lows
+        open (pd.Series): Series of opens
+        close (pd.Series): Series of closes
 
     Returns:
-        numpy array/same as input type: Balance of Power
+        pd.Series: Balance of Power series
+
+    Source: https://school.stockcharts.com/doku.php?id=technical_indicators:balance_of_power
     """
 
     return (close - open) / (high - low)
