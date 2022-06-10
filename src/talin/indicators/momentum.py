@@ -397,41 +397,45 @@ def rsi(close: pd.Series, periods=14) -> pd.Series:
     return 100 - (100 / (1 + (avgGain/avgLoss)))
 
 
-def stochf(high: pd.Series, low: pd.Series, close: pd.Series, period=14) -> pd.Series:
+def stochf(high: pd.Series, low: pd.Series, close: pd.Series, periods=14) -> pd.Series:
     """Calculates the Fast Stochastic Oscillator given an input of the highes, lows, and closes.
 
     Args:
         high (pd.Series): Series of highs
         low (pd.Series): Series of lows
         close (pd.Series): Series of closes
-        period (int, optional): Number of periods to look back. Defaults to 14.
+        periods (int, optional): Number of periods to look back. Defaults to 14.
 
     Returns:
         pd.Series: Fast Stochasic Oscillator
+
+    Source: https://www.investopedia.com/ask/answers/05/062405.asp
     """
 
-    highest = high.rolling(period).max()
-    lowest = low.rolling(period).min()
+    highest = high.rolling(periods).max()
+    lowest = low.rolling(periods).min()
 
     return (close - lowest) / (highest - lowest) * 100
 
 
 def stoch(high: pd.Series, low: pd.Series, close: pd.Series,
-          period=14, slow_window=3) -> pd.Series:
+          periods=14, slow=3) -> pd.Series:
     """Calculates the Slow Stochastic Oscillator given an input of the highes, lows, and closes. The slow stochastic has a 3 period moving average applied to the stochastic indicator.
 
     Args:
         high (pd.Series): Series of highs
         low (pd.Series): Series of lows
         close (pd.Series): Series of closes
-        period (int, optional): Number of periods to look back. Defaults to 14.
-        slow_window (int, optional): The smoothing window on the stochastic indicator (1 -> fast stochastic). Defaults to 3.
+        periods (int, optional): Number of periods to look back. Defaults to 14.
+        slow (int, optional): The smoothing window on the stochastic indicator (1 -> fast stochastic). Defaults to 3.
 
     Returns:
         pd.Series: Slow Stochasic Oscillator
+
+    Source: https://www.investopedia.com/ask/answers/05/062405.asp
     """
 
-    return stochf(high, low, close, period).rolling(3).mean()
+    return stochf(high, low, close, periods).rolling(slow).mean()
 
 
 def stoch_rsi(price: pd.Series, periods=14, rsi_periods=14) -> pd.Series:
