@@ -21,6 +21,8 @@ def plus_dm(high: pd.Series) -> pd.Series:
 
     Returns:
         pd.Series: positive directional movement
+
+    Source: https://www.investopedia.com/terms/a/adx.asp
     """
 
     pDM = high - high.shift()
@@ -36,8 +38,9 @@ def minus_dm(low: pd.Series) -> pd.Series:
 
     Returns:
         pd.Series: negative directional movement
-    """
 
+    Source: https://www.investopedia.com/terms/a/adx.asp
+    """
     nDM = low.shift() - low
     nDM[nDM < 0] = 0
 
@@ -55,6 +58,8 @@ def di(high: pd.Series, low: pd.Series, close: pd.Series, periods=14) -> tuple[p
 
     Returns:
         tuple[pd.Series, pd.Series]: returns a tuple of (positive DI, negative DI) series.
+
+    Source: https://www.investopedia.com/terms/a/adx.asp
     """
 
     atr = volatility.atr(high, low, close, periods)
@@ -72,6 +77,8 @@ def dx(pDI: pd.Series, nDI: pd.Series) -> pd.Series:
 
     Returns:
         pd.Series: Directional Movement Index
+
+    Source: https://www.investopedia.com/terms/a/adx.asp
     """
 
     pDI, nDI = (pd.Series(pDI), pd.Series(nDI))
@@ -89,6 +96,8 @@ def adx(high: pd.Series, low: pd.Series, close: pd.Series, periods=14) -> tuple[
 
     Returns:
         (pd.Series, pd.Series, pd.Series): Returns a tuple of the positive directional indicator, the negative direction indicator, and the average directional index
+
+    Source: https://www.investopedia.com/terms/a/adx.asp
     """
 
     pDI, nDI = di(high, low, close, periods=14)
