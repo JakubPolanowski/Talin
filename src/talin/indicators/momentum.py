@@ -194,7 +194,7 @@ def aroon_osc(high: pd.Series, low: pd.Series, periods=25) -> pd.Series:
 
 
 def bop(high: pd.Series, low: pd.Series, open: pd.Series, close: pd.Series) -> pd.Series:
-    """Calculates the Balance of Power indicator, given the input arrays of high, low, open, and close. Note that these input arrays must be numpy arrays or similar objects such as pandas Series
+    """Calculates the Balance of Power indicator, given the input arrays of high, low, open, and close. 
 
     Args:
         high (pd.Series): Series of highs
@@ -211,25 +211,24 @@ def bop(high: pd.Series, low: pd.Series, open: pd.Series, close: pd.Series) -> p
     return (close - open) / (high - low)
 
 
-def cci(high, low, close, periods=20):
-    """Calculates the Commodity Channel Index, given the input arrays of high, low, open and close. Note that these input arrays must be numpy arrays or similar objects such as pandas Series.
+def cci(high: pd.Series, low: pd.Series, close: pd.Series, periods=20) -> pd.Series:
+    """Calculates the Commodity Channel Index, given the input arrays of high, low, open and close. 
 
     Args:
-        high (numpy array): array of highs
-        low (numpy array): array of lows
-        close (numpy array): array of closes
+        high (pd.Series): array of highs
+        low (pd.Series): array of lows
+        close (pd.Series): array of closes
         periods (int, optional): Number of periods for the moving average. Defaults to 20.
 
     Returns:
-        pandas Series: Commodity Channel Index series.
+        pd.Series: Commodity Channel Index series.
     """
 
-    typicalP = pd.Series(simple_stats.typical_price(high, low, close))
-    movingAvg = typicalP.rolling(periods).mean()
-    meanDeviation = (
-        typicalP - movingAvg).abs().rolling(periods).mean() / periods
+    typicalP = simple_stats.typical_price(high, low, close)
+    mAvg = typicalP.rolling(periods).mean()
+    meanDeviation = (typicalP - mAvg).abs().rolling(periods).mean()
 
-    return (typicalP - movingAvg) / (0.015 * meanDeviation)
+    return (typicalP - mAvg) / (0.015 * meanDeviation)
 
 
 def cmo(close, periods=9):
