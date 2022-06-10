@@ -192,22 +192,22 @@ def test_aroon():
     n_periods = [3, 15, 25]
 
     for n_period in n_periods:
-        up_count = []
-        down_count = []
+        up_dist = []
+        down_dist = []
 
-        for i in range(size):
-            if i < n_period - 1:
-                up_count.append(np.NaN)
-                down_count.append(np.NaN)
+        for i in range(1, size+1):
+            if i < n_period:
+                up_dist.append(np.NaN)
+                down_dist.append(np.NaN)
             else:
-                high_slice = high.value[i-n_period:i]
-                low_slice = low.value[i-n_period:i]
+                high_slice = high.values[i-n_period:i]
+                low_slice = low.values[i-n_period:i]
 
-                up_count.append(np.argmax(high_slice) + i)
-                down_count.append(np.argmin(low_slice) + i)
+                up_dist.append((n_period-1) - np.argmax(high_slice))
+                down_dist.append((n_period-1) - np.argmin(low_slice))
 
-        aroon_up = (n_period - pd.Series(up_count)) / n_period * 100
-        aroon_down = (n_period - pd.Series(down_count)) / n_period * 100
+        aroon_up = (n_period - pd.Series(up_dist)) / n_period * 100
+        aroon_down = (n_period - pd.Series(down_dist)) / n_period * 100
 
         implement_a_up, implemented_a_down = momentum.aroon(
             high, low, periods=n_period)
