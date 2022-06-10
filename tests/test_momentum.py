@@ -123,7 +123,7 @@ def test_adx():
 
         for i in range(periods+1, dx.size):
             adx.append(
-                ((adx[i-periods] * periods-1) + dx.values[i]) / periods
+                ((adx[i-periods] * (periods-1)) + dx.values[i]) / periods
             )
 
         adx = pd.Series(adx)
