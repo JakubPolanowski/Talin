@@ -121,14 +121,19 @@ def test_adx():
 
         adx = [np.NaN] * (periods-1) + [np.mean(dx.values[:periods])]
 
-        for i in range(periods+1, dx.size):
+        for i in range(periods, dx.size):
             adx.append(
-                ((adx[i-periods] * (periods-1)) + dx.values[i]) / periods
+                ((adx[i-1] * (periods-1)) + dx.values[i]) / periods
             )
 
         adx = pd.Series(adx)
-        assert all(adx.dropna() == momentum.adx(
-            high, low, close, periods=i).dropna())
+
+        implemented_pDI, implemented_nDI, implemented_adx = momentum.adx(
+            high, low, close, periods=i)
+
+        assert all(pDI.dropna() == implemented_pDI.dropna())
+        assert all(nDI.dropna() == implemented_nDI.dropna())
+        assert all(adx.dropna() == implemented_adx.dropna())
 
 
 def test_adxr():
