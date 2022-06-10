@@ -432,11 +432,23 @@ def test_rsi():
     gain = delta.mask(close < close.shift(1), 0)
     loss = delta.mask(close > close.shift(1), 0)
 
-    for i in range(1, 21):
-        sma_gain = gain.rolling(i).mean()
-        sma_loss = loss.rolling(i).mean()
+    for periods in range(1, 21):
 
-        rsi = 100 - (100 / (1 + (sma_gain/sma_loss)))
+        avgGain = [np.NaN] * (periods-1) + [np.mean(gain.values[:periods])]
+        avgLoss = [np.NaN] * (periods-1) + [np.mean(loss.values[:periods])]
+
+        for i in range(periods, delta.size):
+            avgGain.append(
+                ((avgGain[i-1] * (periods-1)) + gain.values[i]) / periods
+            )
+            avgLoss.append(
+                ((avgLoss[i-1] * (periods-1)) + loss.values[i]) / periods
+            )
+
+        avgGain = pd.Series(avgGain)
+        avgLoss = pd.Series(avgLoss)
+
+        rsi = 100 - (100 / (1 + (avgGain/avgLoss)))
 
         assert all(rsi.dropna() == momentum.rsi(close, periods=i).dropna())
 
