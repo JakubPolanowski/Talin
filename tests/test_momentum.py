@@ -430,7 +430,7 @@ def test_rsi():
 
     delta = close.diff()
     gain = delta.mask(close < close.shift(1), 0)
-    loss = delta.mask(close > close.shift(1), 0)
+    loss = delta.mask(close > close.shift(1), 0).abs()
 
     for periods in range(1, 21):
 
