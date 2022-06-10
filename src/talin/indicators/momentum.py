@@ -91,7 +91,7 @@ def adx(high: pd.Series, low: pd.Series, close: pd.Series, periods=14) -> tuple[
     Args:
         high (pd.Series): series of highs
         low (pd.Series): series of lows
-        close (pd.Series): series of closes 
+        close (pd.Series): series of closes
         periods (int, optional): The number of periods to lookback/use as the window. Defaults to 14.
 
     Returns:
@@ -118,7 +118,7 @@ def adx(high: pd.Series, low: pd.Series, close: pd.Series, periods=14) -> tuple[
 
 
 def adxr(adx: pd.Series, periods=2) -> pd.Series:
-    """Calculates the Average Direction Movement Rating given the ADX and the number of periods to look backwards. 
+    """Calculates the Average Direction Movement Rating given the ADX and the number of periods to look backwards.
 
     Args:
         adx (pd.Series): array/series of Average Directional Movement Indexes
@@ -194,7 +194,7 @@ def aroon_osc(high: pd.Series, low: pd.Series, periods=25) -> pd.Series:
 
 
 def bop(high: pd.Series, low: pd.Series, open: pd.Series, close: pd.Series) -> pd.Series:
-    """Calculates the Balance of Power indicator, given the input arrays of high, low, open, and close. 
+    """Calculates the Balance of Power indicator, given the input arrays of high, low, open, and close.
 
     Args:
         high (pd.Series): Series of highs
@@ -212,7 +212,7 @@ def bop(high: pd.Series, low: pd.Series, open: pd.Series, close: pd.Series) -> p
 
 
 def cci(high: pd.Series, low: pd.Series, close: pd.Series, periods=20) -> pd.Series:
-    """Calculates the Commodity Channel Index, given the input arrays of high, low, open and close. 
+    """Calculates the Commodity Channel Index, given the input arrays of high, low, open and close.
 
     Args:
         high (pd.Series): array of highs
@@ -344,7 +344,7 @@ def ppo(price: pd.Series, short_periods=12, long_periods=26) -> pd.Series:
 
 
 def roc(close: pd.Series, periods=12) -> pd.Series:
-    """Calculates Rate of Change given series of prices.
+    """Calculates Rate of Change.
 
     Args:
         close (pd.Series): list of closes
@@ -359,27 +359,42 @@ def roc(close: pd.Series, periods=12) -> pd.Series:
     return (close - close.shift(periods)) / close.shift(periods) * 100
 
 
-def rsi(price, periods=14):
-    """Calculates the Relative Strength Index based on the given price series and the number of periods to look back.
+def rsi(close: pd.Series, periods=14) -> pd.Series:
+    """Calculates the Relative Strength Index.
 
     Args:
-        price (Numeric List): list of prices
+        close (pd.Series): series of closes
         periods (int, optional): Number of periods to look back. Defaults to 14.
 
     Returns:
-        pandas Series: RSI series
+        pd.Series: RSI series
+
+    Source: https://www.investopedia.com/terms/r/rsi.asp
     """
 
-    price = pd.Series(price)
-    diff = price.diff()
+    diff = close.diff()
 
-    positiveNegative = diff.apply(
-        lambda x: 1 if x > 0 else 0 if x < 0 else x)
-    gain = diff * positiveNegative
-    loss = diff.abs() * (1-positiveNegative)
+    gains = diff.mask(close < close.shift(1), 0)
+    losses = diff.mask(close > close.shift(1), 0).abs()
 
-    rs = gain.rolling(periods).mean() / loss.rolling(periods).mean()
-    return 100 - (100 / (1+rs))
+    # TODO figure out if a there is a better implementation for this
+    # This is a WSM average which has no implemenation in pandas
+
+    avgGain = [np.NaN] * (periods-1) + [np.mean(gains.values[:periods])]
+    avgLoss = [np.NaN] * (periods-1) + [np.mean(losses.values[:periods])]
+
+    for i in range(periods, diff.size):
+        avgGain.append(
+            (avgGain[i-1] * (periods-1)) + gains.values[i]
+        )
+        avgLoss.append(
+            (avgLoss[i-1] * (periods-1)) + losses.values[i]
+        )
+
+    avgGain = pd.Series(avgGain)
+    avgLoss = pd.Series(avgLoss)
+
+    return 100 - (100 / (1 + (avgGain/avgLoss)))
 
 
 def stochf(high: pd.Series, low: pd.Series, close: pd.Series, period=14) -> pd.Series:
