@@ -151,7 +151,7 @@ def apo(close: pd.Series, short_periods=14, long_periods=30) -> pd.Series:
         close.ewm(span=long_periods, adjust=False).mean()
 
 
-def aroon(high: pd.Series, low: pd.Series, periods=25) -> pd.Series:
+def aroon(high: pd.Series, low: pd.Series, periods=25) -> tuple[pd.Series, pd.Series]:
     """Calculates the AROON indicator given the lists of highs and lows and the number of periods to use in the calculation.
 
     Args:
@@ -176,15 +176,17 @@ def aroon(high: pd.Series, low: pd.Series, periods=25) -> pd.Series:
     return aroon_up, aroon_down
 
 
-def aroon_osc(high, low, periods=25):
+def aroon_osc(high: pd.Series, low: pd.Series, periods=25) -> pd.Series:
     """Calculates the AROON Oscillator given the lists of high and lows and the number of periods to use in the calculation.
 
     Args:
-        high (Numerical List): List of highs
-        low (Numerical List): List of lows
+        high (pd.Series): Series of highs
+        low (pd.Series): Series of lows
         periods (int, optional): Number of periods. Defaults to 25.
     Returns:
-        pandas Series: AROON Oscillator series
+        pd.Series: AROON Oscillator series
+
+    Source: https://school.stockcharts.com/doku.php?id=technical_indicators:aroon_oscillator
     """
 
     aroon_up, aroon_down = aroon(high, low, periods)
