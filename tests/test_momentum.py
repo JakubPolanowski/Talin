@@ -369,7 +369,7 @@ def test_mom():
 
     for i in range(1, 21):
         mom = close - close.shift(i)
-        assert all(mom.dropna() == momentum.mom(close, periods=i))
+        assert all(mom.dropna() == momentum.mom(close, periods=i).dropna())
 
 
 def test_ppo():
