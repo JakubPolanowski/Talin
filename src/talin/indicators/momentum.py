@@ -117,18 +117,20 @@ def adx(high: pd.Series, low: pd.Series, close: pd.Series, periods=14) -> tuple[
     return pDI, nDI, pd.Series(adx_)
 
 
-def adxr(adx, lookback=2):
-    """Calculates the Average Direction Movement Rating given the ADX and the number of periods to look backwards. ADX input must be given as a numpy array or similar object like pandas series. 
+def adxr(adx: pd.Series, periods=2) -> pd.Series:
+    """Calculates the Average Direction Movement Rating given the ADX and the number of periods to look backwards. 
 
     Args:
-        adx (numpy array): array/series of Average Directional Movement Indexes
-        lookback (int): Number of periods to look backwards. Defaults to 2.
+        adx (pd.Series): array/series of Average Directional Movement Indexes
+        periods (int): Number of periods to look backwards. Defaults to 2.
 
     Returns:
-        pandas Series: The Average Direction Movement Rating
+        pd.Series: The Average Direction Movement Rating
+
+    Source: https://www.marketvolume.com/technicalanalysis/adxr.asp
     """
 
-    return (adx - pd.Series(adx).shift(lookback)) / 2
+    return (adx - adx.shift(periods)) / 2
 
 
 def apo(close, short_periods=14, long_periods=30):
