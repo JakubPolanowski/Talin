@@ -119,7 +119,7 @@ def test_adx():
 
     for periods in range(1, 21):
 
-        adx = [np.NaN] * periods-1 + [np.mean(dx.values[:periods])]
+        adx = [np.NaN] * (periods-1) + [np.mean(dx.values[:periods])]
 
         for i in range(periods+1, dx.size):
             adx.append(
