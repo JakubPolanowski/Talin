@@ -1,8 +1,6 @@
 import numpy as np
 import pandas as pd
 
-# TODO consider replacing loopback with periods
-
 
 __all__ = [
     "trange", "atr", "natr"
