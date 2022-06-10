@@ -275,32 +275,34 @@ def macd(close: pd.Series, short_periods=12, long_periods=26) -> pd.Series:
         close.ewm(span=long_periods, adjust=False).mean()
 
 
-def mfi(high, low, close, volume, periods=14):
-    """Calculates the Money Flow Index given the input arrays high, low, close, and volume, as well as the number of periods to look back. Note that the input arrays must be given as numpy arrays or similar objects such as pandas Series.
+def mfi(high: pd.Series, low: pd.Series, close: pd.Series, volume: pd.Series, periods=14) -> pd.Series:
+    """Calculates the Money Flow Index/
 
     Args:
-        high (numpy array): Array of highs
-        low (numpy array): Array of lows
-        close (numpy array): Array of closes
-        volume (numpy array): Array of volumes
+        high (pd.Series): Series of highs
+        low (pd.Series): Series of lows
+        close (pd.Series): Series of closes
+        volume (pd.Series): Series of volumes
         periods (int, optional): Number of periods to look back. Defaults to 14.
 
     Returns:
-        pandas Series: Money Flow Index series
+        pd.Series: Money Flow Index series
+
+    Source: https://www.investopedia.com/terms/m/mfi.asp
     """
 
     typicalP = pd.Series(simple_stats.typical_price(high, low, close))
-    typicalDiff = typicalP.diff()
-    moneyFlow = typicalP * volume
+    rawMoney = typicalP * volume
 
-    # the final else accomidates for NaN
-    positiveNegative = typicalDiff.apply(
-        lambda x: 1 if x > 0 else 0 if x < 0 else x)
-    positiveFlow = moneyFlow * positiveNegative
-    negativeFlow = moneyFlow * (1-positiveNegative)
+    posFlow = rawMoney.mask(typicalP < typicalP.shift(1), 0)
+    negFlow = rawMoney.mask(typicalP > typicalP.shift(1), 0)
 
-    moneyFlowRatio = positiveFlow.rolling(
-        periods).sum() / negativeFlow.rolling(periods).sum()
+    # first value is negative since cannot compare previous of first typ price
+    posFlow.loc[posFlow.index[0]] = np.NaN
+    negFlow.loc[negFlow.index[0]] = np.NaN
+
+    moneyFlowRatio = posFlow.rolling(periods).sum() / \
+        negFlow.rolling(periods).sum()
 
     return 100 - (100 / (1 + moneyFlowRatio))
 
