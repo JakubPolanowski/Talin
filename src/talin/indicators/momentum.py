@@ -448,6 +448,8 @@ def stoch_rsi(price: pd.Series, periods=14, rsi_periods=14) -> pd.Series:
 
     Returns:
         pd.Series: Stochastic RSI indicator
+
+    Source: https://www.investopedia.com/terms/s/stochrsi.asp
     """
 
     rsi_indicator = rsi(price, rsi_periods)
