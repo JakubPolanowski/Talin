@@ -323,23 +323,24 @@ def mom(price: pd.Series, periods=10) -> pd.Series:
     return price - price.shift(periods)
 
 
-def ppo(price, short_periods=12, long_periods=26):
-    """Calculates the Percentage Price Oscillator based on given price list and number of periods in the short and long term.
+def ppo(price: pd.Series, short_periods=12, long_periods=26) -> pd.Series:
+    """Calculates the Percentage Price Oscillator based on given price series and number of periods in the short and long term.
 
     Args:
-        price (Numerical List): List of prices
+        price (pd.Series): Series of prices
         short_periods (int, optional): N periods to use for short term. Defaults to 12.
         long_periods (int, optional): N periods to use for long term. Defaults to 26.
 
     Returns:
         pandas Series: Percentage Price Oscillator series
+
+    Source: https://www.investopedia.com/articles/investing/051214/use-percentage-price-oscillator-elegant-indicator-picking-stocks.asp
     """
 
-    price = pd.Series(price)
-    short_ema = price.ewm(alpha=1/short_periods)
-    long_ema = price.ewm(alpha=1/long_periods)
+    short_ema = price.ewm(span=short_periods, adjust=False).mean()
+    long_ema = price.ewm(span=long_periods, adjust=False).mean()
 
-    return (short_ema - long_ema) / long_ema * 100
+    return (short_ema - long_ema) / long_ema
 
 
 def roc(price):
