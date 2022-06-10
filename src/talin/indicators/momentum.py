@@ -523,6 +523,8 @@ def willr(high: pd.Series, low: pd.Series, close: pd.Series, periods=14) -> pd.S
 
     Returns:
         pd.Series: Williams' %R series
+
+    Source: https://www.investopedia.com/terms/w/williamsr.asp
     """
 
     highestH = high.rolling(periods).max()
