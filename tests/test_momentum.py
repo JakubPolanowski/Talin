@@ -473,7 +473,8 @@ def test_stochf():
 
         K = (close - ll) / (hh - ll) * 100
 
-        assert all(K.dropna() == momentum.stochf(high, low, close, periods=i))
+        assert all(K.dropna() == momentum.stochf(
+            high, low, close, periods=i).dropna())
 
 
 def test_stoch():
@@ -488,12 +489,12 @@ def test_stoch():
     Typically 3 day slow
     """
 
-    stochf = momentum.stochf(high, low, close, period=14)
+    stochf = momentum.stochf(high, low, close, periods=14)
 
     for i in range(1, 21):
         stoch = stochf.rolling(i).mean()
         assert all(stoch.dropna() == momentum.stoch(
-            high, low, close, period=14, slow=i).dropna())
+            high, low, close, periods=14, slow=i).dropna())
 
 
 def test_stoch_rsi():
