@@ -503,6 +503,8 @@ def test_stoch_rsi():
                        RSI - min of RSI for N periods
     StochRSI = -----------------------------------------------
                 max RSI for N Periods - min RSI for N Periods
+
+    Source: https://www.investopedia.com/terms/s/stochrsi.asp
     """
 
     rsi_ps = [3, 12, 26]
