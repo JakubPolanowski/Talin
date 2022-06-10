@@ -133,20 +133,22 @@ def adxr(adx: pd.Series, periods=2) -> pd.Series:
     return (adx - adx.shift(periods)) / 2
 
 
-def apo(close, short_periods=14, long_periods=30):
-    """Calculates Absolute Price Oscilliator given the a list of closing values and the number of periods for the short term and long term
+def apo(close: pd.Series, short_periods=14, long_periods=30) -> pd.Series:
+    """Calculates Absolute Price Oscilliator given the a list of closing values and the number of periods for the short term and long term.
 
     Args:
-        close (Numerical List): List of closing values
+        close (pd.Series): Series of closing values
         short_periods (int, optional): Number of periods for the short term. Defaults to 14.
         long_periods (int, optional): Number of periods for the long term. Defaults to 30.
 
     Returns:
-        pandas Series: Absolute Price Oscillator series
+        pd.Series: Absolute Price Oscillator series
+
+    Source: https://www.fidelity.com/learning-center/trading-investing/technical-analysis/technical-indicator-guide/apo
     """
 
-    close = pd.Series(close)
-    return close.ewm(alpha=1/short_periods) - close.ewm(alpha=1/long_periods)
+    return close.ewm(span=short_periods, adjust=False).mean() - \
+        close.ewm(span=long_periods, adjust=False).mean()
 
 
 def aroon(high, low, periods=25):
