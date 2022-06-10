@@ -10,8 +10,6 @@ __all__ = [
     "stoch", "stoch_rsi", "trix", "ultosc", "willr",
 ]
 
-# TODO refactor to explicityly use predominantly use pd Series
-
 
 def plus_dm(high: pd.Series) -> pd.Series:
     """Calculates the Positive Directional Movement
