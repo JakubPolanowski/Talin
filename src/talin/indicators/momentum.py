@@ -78,33 +78,34 @@ def dx(pDI: pd.Series, nDI: pd.Series) -> pd.Series:
     return (pDI - nDI).abs() / (pDI + nDI).abs() * 100
 
 
-def adx(high, low, close, loopback=14):
-    """Calculates the Average Directional Index given the highs, lows, closes, and the loopback (window). Note that the input arrays (high, low, and close) must be guven as numpy arrays or similar objects such as pandas series. 
+def adx(high: pd.Series, low: pd.Series, close: pd.Series, periods=14) -> tuple[pd.Series, pd.Series, pd.Series]:
+    """Calculates the Average Directional Index given the highs, lows, closes, and the loopback (window).
 
     Args:
-        high (numpy array): array of highs
-        low (numpy array): array of lows
-        close (numpy array): array of closes 
-        loopback (int, optional): The number of periods to use as the window. Defaults to 14.
+        high (pd.Series): series of highs
+        low (pd.Series): series of lows
+        close (pd.Series): series of closes 
+        periods (int, optional): The number of periods to lookback/use as the window. Defaults to 14.
 
     Returns:
-        (pandas Series, pandas Series, pandas Series): Returns a tuple of the positive directional indicator, the negative direction indicator, and the average directional index
+        (pd.Series, pd.Series, pd.Series): Returns a tuple of the positive directional indicator, the negative direction indicator, and the average directional index
     """
 
-    pDM = plus_dm(high)
-    nDM = minus_dm(low)
+    pDI, nDI = di(high, low, close, periods=14)
+    dx_ = dx(pDI, nDI)
 
-    avgTR = volatility.atr(high, low, np.r_[np.NaN, close[:-1]], loopback)
+    # TODO determine if there is a more efficient way to do this
+    # without using cython or numba
 
-    pDI = di(pDM, avgTR, loopback)
-    nDI = di(nDM, avgTR, loopback)
+    first_adx = np.mean(dx_.values[:periods])
+    adx_ = [np.NaN] * (periods-1) + [first_adx]
 
-    pDI = 100 * (pd.Series(pDM).ewm(alpha=1/loopback).mean() / avgTR)
-    nDI = 100 * (pd.Series(nDM).ewm(alpha=1/loopback).mean() / avgTR)
+    for i in range(periods, dx_.size):
+        adx_.append(
+            ((adx_[i-1] * (periods-1)) + dx_[i]) / periods
+        )
 
-    averageDX = dx(pDI, nDI).ewm(alpha=1/loopback).mean()
-
-    return pDI, nDI, averageDX
+    return pDI, nDI, pd.Series(adx_)
 
 
 def adxr(adx, lookback=2):
