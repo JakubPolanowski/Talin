@@ -117,13 +117,13 @@ def test_adx():
 
     dx = momentum.dx(pDI, nDI)
 
-    for i in range(1, 21):
+    for periods in range(1, 21):
 
-        adx = [np.NaN] * i-1 + [np.mean(dx.values[:i])]
+        adx = [np.NaN] * periods-1 + [np.mean(dx.values[:periods])]
 
-        for i in range(i+1, dx.size):
+        for i in range(periods+1, dx.size):
             adx.append(
-                ((adx[i-1] * i-1) + dx.values[i]) / i
+                ((adx[i-periods] * periods-1) + dx.values[i]) / periods
             )
 
         adx = pd.Series(adx)
