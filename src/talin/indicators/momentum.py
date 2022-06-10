@@ -459,26 +459,26 @@ def stoch_rsi(price: pd.Series, periods=14, rsi_periods=14) -> pd.Series:
     return (rsi_indicator - rsi_low) / (rsi_high - rsi_low)
 
 
-def trix(price: pd.Series, first_periods=15, second_periods=15, third_periods=15) -> pd.Series:
+def trix(price: pd.Series, periods=15) -> pd.Series:
     """Calculates the Triple Exponential Average give a price series.
 
     Args:
         price (pd.Series): Series of prices
-        first_periods (int, optional): N Periods to use for first ema. Defaults to 15.
-        second_periods (int, optional): N Periods to use for second ema. Defaults to 15.
-        third_periods (int, optional): N Periods to use for third ema. Defaults to 15.
+        periods (int, optional): N Periods to use for the triple ema. Defaults to 15.
 
     Returns:
-        pd.Series: _description_
+        pd.Series: Trix series
+
+    Source: https://www.investopedia.com/terms/t/trix.asp#:~:text=The%20triple%20exponential%20average%20(TRIX)%20indicator%20is%20an%20oscillator%20used,are%20considered%20insignificant%20or%20unimportant
     """
 
-    triple = price.ewm(alpha=1/first_periods)\
-        .ewm(alpha=1/second_periods)\
-        .ewm(alpha=1/third_periods)
+    triple = price.ewm(span=periods, adjust=False).mean() \
+        .ewm(span=periods, adjust=False).mean() \
+        .ewm(span=periods, adjust=False).mean()
 
     diff = triple.diff()
 
-    return (triple - diff) / diff
+    return (triple - triple.shift()) / triple.shift()
 
 
 def ultosc(high: pd.Series, low: pd.Series, close: pd.Series,
