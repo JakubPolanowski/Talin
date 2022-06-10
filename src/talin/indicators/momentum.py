@@ -222,6 +222,8 @@ def cci(high: pd.Series, low: pd.Series, close: pd.Series, periods=20) -> pd.Ser
 
     Returns:
         pd.Series: Commodity Channel Index series.
+
+    Source: https://www.investopedia.com/terms/c/commoditychannelindex.asp
     """
 
     typicalP = simple_stats.typical_price(high, low, close)
@@ -231,24 +233,28 @@ def cci(high: pd.Series, low: pd.Series, close: pd.Series, periods=20) -> pd.Ser
     return (typicalP - mAvg) / (0.015 * meanDeviation)
 
 
-def cmo(close, periods=9):
-    """Calculates the Chande Momentum Oscillator given the input list of closes and the number of periods to look back.
+def cmo(close: pd.Series, periods=9) -> pd.Series:
+    """Calculates the Chande Momentum Oscillator.
 
     Args:
-        close (Numerical List): List of closes
+        close (pd.Series): Series of closes
         periods (int, optional): Number of periods to look back. Defaults to 9.
 
     Returns:
-        pandas Series: Chande Momenum Oscillator series
+        pd.Series: Chande Momenum Oscillator series
+
+    Source: https://www.investopedia.com/terms/c/chandemomentumoscillator.asp
     """
 
-    close = pd.Series(close).diff()
+    diff = close.diff()
 
-    up_down = close.diff().apply(lambda x: 1 if x > 0 else 0 if x < 0 else x)
-    nHigher = up_down.roling(periods).sum()
-    nLower = (1-up_down).rolling(periods).sum()
+    gains = diff.mask(close < close.shift(1), 0)
+    losses = diff.mask(close > close.shift(1), 0).abs()
 
-    return (nHigher - nLower) / (nHigher + nLower) * 100
+    sH = gains.rolling(periods).sum()
+    sL = losses.rolling(periods).sum()
+
+    return (sH - sL) / (sH + sL) * 100
 
 
 def macd(close, short_periods=12, long_periods=26):
