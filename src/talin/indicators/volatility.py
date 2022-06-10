@@ -17,6 +17,8 @@ def trange(high: pd.Series, low: pd.Series, close: pd.Series) -> pd.Series:
 
     Returns:
         pd.Series: Series of the True range
+
+    Source: https://www.investopedia.com/terms/a/atr.asp
     """
     return pd.Series(
         np.r_[
@@ -38,6 +40,8 @@ def atr(high: pd.Series, low: pd.Series, close: pd.Series, periods=14) -> pd.Ser
 
     Returns:
         pd.Series: The Average True Range series
+
+    Source: https://www.investopedia.com/terms/a/atr.asp
     """
 
     return trange(high, low, close).rolling(periods).mean()
@@ -54,6 +58,8 @@ def natr(high: pd.Series, low: pd.Series, close: pd.Series, periods=14) -> pd.Se
 
     Returns:
         pd.Series: Normalized True Range series
+
+    Source: https://mudrex.com/blog/normalized-average-true-range-trading-strategy/
     """
 
     return atr(high, low, close, periods) / close * 100
