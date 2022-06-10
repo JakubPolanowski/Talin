@@ -146,7 +146,7 @@ def test_adxr():
     Source: https://www.marketvolume.com/technicalanalysis/adxr.asp
     """
 
-    adx = momentum.adx(high, low, close, periods=14)
+    _, _, adx = momentum.adx(high, low, close, periods=14)
 
     for i in range(1, 21):
         adxr = (adx - adx.shift(i)) / 2
