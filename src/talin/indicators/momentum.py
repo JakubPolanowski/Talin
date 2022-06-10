@@ -495,19 +495,23 @@ def ultosc(high: pd.Series, low: pd.Series, close: pd.Series,
 
     Returns:
         pd.Series: Ultimate Oscillator series
+
+    Source: https://www.investopedia.com/terms/u/ultimateoscillator.asp
     """
 
-    minLowPC = np.r_[low.values, close.shift(1).values].T.min(axis=1)
-    true_range = pd.Series(volatility.trange(high, low, close.shift(1)))
+    minLowPC = np.r_[[low.values], [close.shift(1).values]].T.min(axis=1)
+    maxHighPC = np.r_[[high.values], [close.shift(1).values]].T.max(axis=1)
+
+    tr = pd.Series(maxHighPC - minLowPC)
 
     buying_pressure = close - minLowPC
 
-    avg1 = buying_pressure.rolling(
-        periods1).sum() / true_range.rolling(periods1).sum()
-    avg2 = buying_pressure.rolling(
-        periods2).sum() / true_range.rolling(periods2).sum()
-    avg3 = buying_pressure.rolling(
-        periods3).sum() / true_range.rolling(periods3).sum()
+    avg1 = buying_pressure.rolling(periods1).sum() / \
+        tr.rolling(periods1).sum()
+    avg2 = buying_pressure.rolling(periods2).sum() / \
+        tr.rolling(periods2).sum()
+    avg3 = buying_pressure.rolling(periods3).sum() / \
+        tr.rolling(periods3).sum()
 
     return (avg1*4 + avg2*2 + avg3) / 5 * 100
 
