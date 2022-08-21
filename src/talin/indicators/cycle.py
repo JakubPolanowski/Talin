@@ -20,7 +20,17 @@ Indicator: Even Better SineWave (EBSW)
 """
 
 
-def ebsw(close: pd.Series, duration: int = 40, ssfLength: int = 10):
+def ebsw(close: pd.Series, duration: int = 40, ssfLength: int = 10) -> pd.Series:
+    """Ehler's Even Better Sinewave. 
+
+    Args:
+        close (pd.Series): A series of closes
+        duration (int, optional): The approximate length of a trade position in a continuing trend. Defaults to 40.
+        ssfLength (int, optional): The critical period in the super smoother filter. Defaults to 10.
+
+    Returns:
+        pd.Series: The series of EBSW indicator
+    """
 
     # vars
     alpha1 = (1 - np.sin(2 * np.pi / duration)) / \
