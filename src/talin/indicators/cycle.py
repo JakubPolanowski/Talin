@@ -73,15 +73,17 @@ def ebsw(close: pd.Series, duration: int = 40, ssfLength: int = 10) -> pd.Series
 def ht_indicator(close: pd.Series, lp_period: int = 20) -> pd.Series:
     """Calculates the Hilbert Transformation Indicator
 
+    This is based on John Ehlers' Cycle Analytics For Traders pgs 184-186
+
+    The turning point to the upside is when the imaginary component crosses over the real component. And conversely turning point to the downside when the imaginary component crosses under the real component
+
     Args:
         close (pd.Series): Series of closes
         lp_period (int, optional): Low Pass Period (TODO confirm if description is correct). Defaults to 20.
 
     Returns:
-        pd.Series: The Hilbert Transformation Indicator Series
+        pd.Series, pd.Series: The real series, the imaginary series
     """
-
-    # This is based on John Ehlers' Cycle Analytics For Traders pgs 184-185
 
     alpha1 = (np.cos(.707 * np.pi*2 / 48) + np.sin(.707 *
               np.pi*2 / 48) - 1) / np.cos(.707 * np.pi*2 / 48)
@@ -100,9 +102,10 @@ def ht_indicator(close: pd.Series, lp_period: int = 20) -> pd.Series:
 
     filtHist = [0, 0]
     hpHist = [0, 0]
-    lastIPeak = lastReal = lastQPeak = lastQuadrature = 0
+    lastIPeak = lastQPeak = lastQuadrature = 0
 
-    result = [0] * 2
+    imaginaries = [0] * 2
+    reals = [0]
 
     for i in range(2, close.size+1):
 
@@ -119,7 +122,7 @@ def ht_indicator(close: pd.Series, lp_period: int = 20) -> pd.Series:
             iPeak = abs(filt)
 
         real = filt / iPeak
-        quadrature = (real - lastReal)
+        quadrature = (real - reals[-1])
         qPeak = .991 * lastQPeak
 
         if abs(quadrature) > qPeak:
@@ -127,16 +130,17 @@ def ht_indicator(close: pd.Series, lp_period: int = 20) -> pd.Series:
 
         quadrature /= qPeak
 
-        result.append(
+        reals.append(real)
+
+        imaginaries.append(
             c1H * (quadrature + lastQuadrature) / 2 +
-            c2H * result[-1] + c3H * result[-2]
+            c2H * imaginaries[-1] + c3H * imaginaries[-2]
         )
 
         filtHist.append(filt)
         hpHist.append(hp)
         lastIPeak = iPeak
-        lastReal = real
         lastQPeak = qPeak
         lastQuadrature = quadrature
 
-    return result
+    return reals, imaginaries
