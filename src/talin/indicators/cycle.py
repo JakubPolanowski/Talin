@@ -75,7 +75,9 @@ def ht_indicator(close: pd.Series, lp_period: int = 20) -> pd.Series:
 
     This is based on John Ehlers' Cycle Analytics For Traders pgs 184-186
 
-    The turning point to the upside is when the imaginary component crosses over the real component. And conversely turning point to the downside when the imaginary component crosses under the real component
+    The turning point to the upside is when the imaginary component crosses over the real component. And conversely turning point to the downside when the imaginary component crosses under the real component.
+
+    Note that the turning point may not be a swing turning point, rather the onset of a new trend. Use EBSW indicator to confirm
 
     Args:
         close (pd.Series): Series of closes
